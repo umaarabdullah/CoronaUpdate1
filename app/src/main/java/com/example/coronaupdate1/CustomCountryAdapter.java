@@ -27,6 +27,7 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
     public CustomCountryAdapter(Context context, List<CountryData> countryDataList){
         this.countryDataList = countryDataList;
         this.context = context;
+        Log.d("customAdapterActivity", "inside customCountryAdapter constructor");
     }
 
 
@@ -37,21 +38,23 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
         // inflate the item Layout xml
         View view = LayoutInflater.from(context).inflate(R.layout.country_item_row_layout,
                 parent, false);
-
+        Log.d("customAdapterActivity", "inside on_createViewHolder after assigning layoutInflater to view");
         // set the view's size, margins, paddings and layout parameters
+        Log.d("customAdapterActivity", "inside on_createViewHolder before calling MyviewHolder constructor");
         MyViewHolder myViewHolder = new MyViewHolder(view); // pass the view to View Holder
+        Log.d("customAdapterActivity", "inside on_createViewHolder after calling MyviewHolder constructor");
         return myViewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull MyViewHolder holder, final int position) {
-
+        Log.d("customAdapterActivity", "inside onBindViewHolder before setting data");
         // set the data
         holder.countryName.setText(countryDataList.get(position).getCountryName());
         Picasso.with(context).load(countryDataList.get(position).getCountryInfo().getFlag()).into(holder.countryFlagImage);
         holder.dailyNewCases.setText("+" + Integer.toString(countryDataList.get(position).getNewCases()));
         holder.dailyNewDeaths.setText("+" + Integer.toString(countryDataList.get(position).getNewDeaths()));
-
+        Log.d("customAdapterActivity", "inside onBindViewHolder after setting data");
         // implement setOnClickListener event on item view.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +69,7 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
 
     @Override
     public int getItemCount() {
+        Log.d("customAdapterActivity", "inside getItemCount");
         if(countryDataList == null) {
             Log.d("getItemCount: NullCheck", "NULL List");
             return 0;

@@ -37,19 +37,20 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Log.d("activityMain", "onCreate: ");
         //default Fragment
         loadFragment(new GlobalFragment());
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation_bar);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        Log.d("activityMain", "bottomNavListener connected: ");
 
         getGlobalData();
-
+        Log.d("activityMain", "got global data ");
         getAllCountryData();
-
+        Log.d("activityMain", "got all country data ");
         getCountryData();
-
+        Log.d("activityMain", "got bangladesh country data ");
     }
 
     public void getGlobalData(){
@@ -82,9 +83,6 @@ public class MainActivity extends AppCompatActivity
                 countryDataList = response.body();
 
                 Log.d("Mutton", "CountryName = " + countryDataList.get(1).getCountryName());
-                /*for (int i=0; i<countryDataList.size(); i++){
-                    Log.i("Mutton", "CountryName = " + countryDataList.get(i).getCountryName());
-                }*/
             }
 
             @Override
@@ -101,7 +99,7 @@ public class MainActivity extends AppCompatActivity
             public void onResponse(Call<CountryData> call, Response<CountryData> response) {
                 countryData = response.body();
 
-                Log.i("Sheek", "NewCases = " + countryData.getNewCases());
+                Log.d("Sheek", "NewCases = " + countryData.getNewCases());
             }
 
             @Override
@@ -114,14 +112,16 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull @NotNull MenuItem item) {
         Fragment fragment;
-
+        Log.d("activityMain", "navitemSelected Method ");
         switch (item.getItemId()){
             case R.id.navigation_global:
                 fragment = new GlobalFragment();
                 break;
 
             case R.id.navigation_country:
+                Log.d("activityMain", "country nav button clicked ");
                 fragment = new CountryFragment(getApplicationContext(), countryDataList);
+                Log.d("activityMain", "after using the countryFragment constructor ");
                 break;
 
             case R.id.navigation_about:
@@ -134,12 +134,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean loadFragment(Fragment fragment){
+        Log.d("activityMain", "inside loadFragment ");
         //switching fragments
         if(fragment != null){
+            Log.d("activityMain", "in fragment not null before method calls ");
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.navigation_container, fragment)
                     .commit();
+            Log.d("activityMain", "in fragment not null after method calls ");
             return true;
         }
         return false;
