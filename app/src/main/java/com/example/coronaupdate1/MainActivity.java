@@ -29,6 +29,10 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener{
 
+    private List<CountryData> countryDataList;
+    private GlobalData globalData;
+    private CountryData countryData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,13 +44,13 @@ public class MainActivity extends AppCompatActivity
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation_bar);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
-        Log.i("Globale", "Start" );
         getGlobalData();
-        Log.i("Globale", "okkkkkkkkk" );
-        Log.i("Country", "Start" );
+
         getAllCountryData();
-        Log.i("Country", "okkkkkkkkk" );
+
         getCountryData();
+
+
     }
 
     public void getGlobalData(){
@@ -54,7 +58,7 @@ public class MainActivity extends AppCompatActivity
         call.enqueue(new Callback<GlobalData>() {
             @Override
             public void onResponse(Call<GlobalData> call, Response<GlobalData> response) {
-                GlobalData globalData = response.body();
+                globalData = response.body();
 
                 Log.i("Beef","Active Cases: " + globalData.getActiveCases());
                 Log.i("Beef","Total Cases: " + globalData.getTotalCases());
@@ -76,7 +80,7 @@ public class MainActivity extends AppCompatActivity
         call.enqueue(new Callback<List<CountryData>>() {
             @Override
             public void onResponse(Call<List<CountryData>> call, Response<List<CountryData>> response) {
-                List<CountryData> countryDataList = response.body();
+                countryDataList = response.body();
 
                 Log.i("Mutton", "CountryName = " + countryDataList.get(1).getCountryName());
                 /*for (int i=0; i<countryDataList.size(); i++){
@@ -96,7 +100,7 @@ public class MainActivity extends AppCompatActivity
         call.enqueue(new Callback<CountryData>() {
             @Override
             public void onResponse(Call<CountryData> call, Response<CountryData> response) {
-                CountryData countryData = response.body();
+                countryData = response.body();
 
                 Log.i("Sheek", "NewCases = " + countryData.getNewCases());
             }
