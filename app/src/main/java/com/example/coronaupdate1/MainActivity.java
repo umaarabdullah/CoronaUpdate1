@@ -38,15 +38,18 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d("activityMain", "onCreate: ");
+
+        getGlobalData();
+        Log.d("activityMain", "got global data before default screen ");
         //default Fragment
-        loadFragment(new GlobalFragment());
+        loadFragment(new GlobalFragment(globalData));
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation_bar);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         Log.d("activityMain", "bottomNavListener connected: ");
 
-        getGlobalData();
-        Log.d("activityMain", "got global data ");
+        //getGlobalData();
+        //Log.d("activityMain", "got global data ");
         getAllCountryData();
         Log.d("activityMain", "got all country data ");
         getCountryData();
@@ -115,7 +118,7 @@ public class MainActivity extends AppCompatActivity
         Log.d("activityMain", "navitemSelected Method ");
         switch (item.getItemId()){
             case R.id.navigation_global:
-                fragment = new GlobalFragment();
+                fragment = new GlobalFragment(globalData);
                 break;
 
             case R.id.navigation_country:
