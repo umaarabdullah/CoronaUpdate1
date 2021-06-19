@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity
 
         getCountryData();
 
-
     }
 
     public void getGlobalData(){
@@ -60,12 +59,12 @@ public class MainActivity extends AppCompatActivity
             public void onResponse(Call<GlobalData> call, Response<GlobalData> response) {
                 globalData = response.body();
 
-                Log.i("Beef","Active Cases: " + globalData.getActiveCases());
-                Log.i("Beef","Total Cases: " + globalData.getTotalCases());
-                Log.i("Beef","Total Deaths: " + globalData.getTotalDeaths());
-                Log.i("Beef","Total Recovered: " + globalData.getTotalRecovered());
-                Log.i("Beef","New Cases: " + globalData.getNewCases());
-                Log.i("Beef","New Recovered: " + globalData.getNewRecovered());
+                Log.d("Beef","Active Cases: " + globalData.getActiveCases());
+                Log.d("Beef","Total Cases: " + globalData.getTotalCases());
+                Log.d("Beef","Total Deaths: " + globalData.getTotalDeaths());
+                Log.d("Beef","Total Recovered: " + globalData.getTotalRecovered());
+                Log.d("Beef","New Cases: " + globalData.getNewCases());
+                Log.d("Beef","New Recovered: " + globalData.getNewRecovered());
             }
 
             @Override
@@ -82,7 +81,7 @@ public class MainActivity extends AppCompatActivity
             public void onResponse(Call<List<CountryData>> call, Response<List<CountryData>> response) {
                 countryDataList = response.body();
 
-                Log.i("Mutton", "CountryName = " + countryDataList.get(1).getCountryName());
+                Log.d("Mutton", "CountryName = " + countryDataList.get(1).getCountryName());
                 /*for (int i=0; i<countryDataList.size(); i++){
                     Log.i("Mutton", "CountryName = " + countryDataList.get(i).getCountryName());
                 }*/
@@ -122,7 +121,7 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case R.id.navigation_country:
-                fragment = new CountryFragment();
+                fragment = new CountryFragment(getApplicationContext(), countryDataList);
                 break;
 
             case R.id.navigation_about:
