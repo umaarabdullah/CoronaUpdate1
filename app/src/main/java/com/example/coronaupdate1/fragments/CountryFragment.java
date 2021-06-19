@@ -19,8 +19,8 @@ import com.example.coronaupdate1.R;
 import java.util.List;
 
 public class CountryFragment extends Fragment {
-    private Context context;
-    private List<CountryData> countryDataList;
+    private final Context context;
+    private final List<CountryData> countryDataList;
 
     public CountryFragment(Context context, List<CountryData> countryDataList){
         this.context = context;

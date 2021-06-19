@@ -4,4 +4,6 @@
     <string name="tile_global">Global</string>
     <string name="tile_country">Country</string>
     <string name="tile_about">About</string>
+    <string name="country_name_title">Country Name</string>
+    <string name="daily_title">Daily New Cases/Deaths</string>
 </resources>

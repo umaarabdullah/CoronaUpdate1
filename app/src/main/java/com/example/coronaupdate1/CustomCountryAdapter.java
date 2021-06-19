@@ -21,8 +21,8 @@ import java.util.List;
 
 public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdapter.MyViewHolder> {
 
-    private Context context;
-    private List<CountryData> countryDataList;
+    private final Context context;
+    private final List<CountryData> countryDataList;
 
     public CustomCountryAdapter(Context context, List<CountryData> countryDataList){
         this.countryDataList = countryDataList;
@@ -49,8 +49,8 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
         // set the data
         holder.countryName.setText(countryDataList.get(position).getCountryName());
         Picasso.with(context).load(countryDataList.get(position).getCountryInfo().getFlag()).into(holder.countryFlagImage);
-        holder.dailyNewCases.setText(Integer.toString(countryDataList.get(position).getNewCases()));
-        holder.dailyNewDeaths.setText(Integer.toString(countryDataList.get(position).getNewDeaths()));
+        holder.dailyNewCases.setText("+" + Integer.toString(countryDataList.get(position).getNewCases()));
+        holder.dailyNewDeaths.setText("+" + Integer.toString(countryDataList.get(position).getNewDeaths()));
 
         // implement setOnClickListener event on item view.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +66,11 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
 
     @Override
     public int getItemCount() {
+        if(countryDataList == null) {
+            Log.d("getItemCount: NullCheck", "NULL List");
+            return 0;
+        }
+        Log.d("getItemCount:EmptyCheck", " " + countryDataList.isEmpty());
         return countryDataList.size();
     }
 

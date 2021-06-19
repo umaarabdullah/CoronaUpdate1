@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="45dp"
-    android:background="@color/teal_200">
+    android:background="@color/colorPrimary">
 
 
     <LinearLayout
@@ -17,36 +17,40 @@
             android:id="@+id/country_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
+            android:textSize="18sp"
             android:text="TextView" />
 
         <ImageView
             android:id="@+id/country_flag_image"
-            android:layout_width="40dp"
-            android:layout_height="20dp"
-            android:layout_marginLeft="20dp"
+            android:layout_width="30dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="7dp"
             android:layout_marginRight="20dp"
+            android:layout_marginLeft="10dp"
             app:srcCompat="@android:drawable/ic_menu_report_image" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/daily_new_cases"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimaryDark"
-                android:text="TextView" />
+                android:textColor="@color/yellow"
+                android:text="TextView"
+                android:textAlignment="viewEnd"/>
 
             <TextView
                 android:id="@+id/daily_new_deaths"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/red"
-                android:text="TextView" />
+                android:text="TextView"
+                android:textAlignment="viewEnd"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
