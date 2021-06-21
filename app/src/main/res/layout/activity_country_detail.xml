@@ -267,7 +267,7 @@
         android:gravity="center"
         android:text="TextView"
         android:textAlignment="center"
-        android:textColor="@color/white"
+        android:textColor="@color/yellow"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/c_total_cases_num" />
@@ -295,7 +295,7 @@
         android:gravity="center"
         android:text="TextView"
         android:textAlignment="center"
-        android:textColor="@color/white"
+        android:textColor="@color/red"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/c_total_deaths_num" />
@@ -323,7 +323,7 @@
         android:gravity="center"
         android:text="TextView"
         android:textAlignment="center"
-        android:textColor="@color/white"
+        android:textColor="@color/green"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/c_total_recovered_num" />
