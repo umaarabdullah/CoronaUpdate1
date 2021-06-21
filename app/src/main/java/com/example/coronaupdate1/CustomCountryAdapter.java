@@ -67,6 +67,8 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
                 Toast.makeText(context, countryDataList.get(position).getCountryName(), Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(context, CountryDetailActivity.class);
+                intent.putExtra("country_name", countryDataList.get(position).getCountryName());
+                intent.putExtra("flag_image", countryDataList.get(position).getCountryInfo().getFlag());
                 intent.putExtra("active_cases", Integer.toString(countryDataList.get(position).getActiveCases()));
                 intent.putExtra("total_cases", Integer.toString(countryDataList.get(position).getTotalCases()));
                 intent.putExtra("new_cases", Integer.toString(countryDataList.get(position).getNewCases()));
