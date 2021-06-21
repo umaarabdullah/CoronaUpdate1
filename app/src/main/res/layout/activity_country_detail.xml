@@ -25,11 +25,11 @@
         android:id="@+id/imageView2"
         android:layout_width="40dp"
         android:layout_height="30dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="180dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="30dp"
         android:src="@drawable/active_cases"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/c_name_country" />
 
     <ImageView
         android:id="@+id/imageView9"
@@ -112,6 +112,7 @@
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textStyle="bold"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/cases_active"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -120,8 +121,8 @@
         android:id="@+id/cases_active"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:layout_marginStart="90dp"
-        android:layout_marginTop="34dp"
+        android:layout_marginStart="85dp"
+        android:layout_marginTop="30dp"
         android:gravity="center"
         android:text="@string/active_cases_title"
         android:textAlignment="center"
@@ -134,7 +135,7 @@
         android:id="@+id/cases_total"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:layout_marginStart="90dp"
+        android:layout_marginStart="85dp"
         android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="@string/total_cases_title"
@@ -148,7 +149,7 @@
         android:id="@+id/cases_new"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:layout_marginStart="90dp"
+        android:layout_marginStart="85dp"
         android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="@string/new_cases_title"
@@ -162,7 +163,7 @@
         android:id="@+id/deaths_total"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:layout_marginStart="90dp"
+        android:layout_marginStart="85dp"
         android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="@string/total_deaths_title"
@@ -176,7 +177,7 @@
         android:id="@+id/deaths_new"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:layout_marginStart="90dp"
+        android:layout_marginStart="85dp"
         android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="@string/new_deaths_title"
@@ -190,7 +191,7 @@
         android:id="@+id/recovered_total"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:layout_marginStart="90dp"
+        android:layout_marginStart="85dp"
         android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="@string/total_recovered_title"
@@ -204,7 +205,7 @@
         android:id="@+id/recovered_new"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:layout_marginStart="90dp"
+        android:layout_marginStart="85dp"
         android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="@string/new_recovered_title"
@@ -218,7 +219,7 @@
         android:id="@+id/tests_total"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:layout_marginStart="90dp"
+        android:layout_marginStart="85dp"
         android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="@string/total_tests_title"
@@ -232,17 +233,16 @@
         android:id="@+id/c_active_cases_num"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:layout_marginTop="178dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="21dp"
         android:gravity="center"
         android:text="TextView"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/c_total_cases_num"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/c_name_country" />
 
     <TextView
         android:id="@+id/c_total_cases_num"
@@ -254,7 +254,6 @@
         android:text="TextView"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/c_active_cases_num" />
 
@@ -268,7 +267,6 @@
         android:text="TextView"
         android:textAlignment="center"
         android:textColor="@color/yellow"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/c_total_cases_num" />
 
@@ -282,7 +280,6 @@
         android:text="TextView"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/c_new_cases_num" />
 
@@ -296,7 +293,6 @@
         android:text="TextView"
         android:textAlignment="center"
         android:textColor="@color/red"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/c_total_deaths_num" />
 
@@ -310,7 +306,6 @@
         android:text="TextView"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/c_new_deaths_num" />
 
@@ -324,7 +319,6 @@
         android:text="TextView"
         android:textAlignment="center"
         android:textColor="@color/green"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/c_total_recovered_num" />
 
@@ -338,7 +332,6 @@
         android:text="TextView"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/c_new_recovered_num" />
 

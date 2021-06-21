@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.coronaupdate1.DataModel.CountryData;
+import com.example.coronaupdate1.utility.StringNumber;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
@@ -50,12 +51,20 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull MyViewHolder holder, final int position) {
+
         Log.d("customAdapterActivity", "inside onBindViewHolder before setting data");
+        StringNumber stringNumber = new StringNumber();
         // set the data
         holder.countryName.setText(countryDataList.get(position).getCountryName());
         Picasso.with(context).load(countryDataList.get(position).getCountryInfo().getFlag()).into(holder.countryFlagImage);
-        holder.dailyNewCases.setText("+" + Integer.toString(countryDataList.get(position).getNewCases()));
-        holder.dailyNewDeaths.setText("+" + Integer.toString(countryDataList.get(position).getNewDeaths()));
+
+        String newCasesListScreen = Integer.toString(countryDataList.get(position).getNewCases());
+        String newDeathsListScreen = Integer.toString(countryDataList.get(position).getNewDeaths());
+        newCasesListScreen = stringNumber.bigNumberFormatting(newCasesListScreen);
+        newDeathsListScreen = stringNumber.bigNumberFormatting(newDeathsListScreen);
+
+        holder.dailyNewCases.setText("+" + newCasesListScreen);
+        holder.dailyNewDeaths.setText("+" + newDeathsListScreen);
         Log.d(TAG, "inside onBindViewHolder after setting data");
         // implement setOnClickListener event on item view.
         holder.itemView.setOnClickListener(new View.OnClickListener() {

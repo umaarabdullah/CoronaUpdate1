@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.coronaupdate1.utility.StringNumber;
 import com.squareup.picasso.Picasso;
 
 public class CountryDetailActivity extends AppCompatActivity {
@@ -41,7 +42,17 @@ public class CountryDetailActivity extends AppCompatActivity {
             String totalRecovered = getIntent().getStringExtra("total_recovered");
             String newRecovered = getIntent().getStringExtra("new_recovered");
             String totalTests = getIntent().getStringExtra("total_tests");
-            
+
+            StringNumber stringNumber = new StringNumber();
+            activeCases = stringNumber.bigNumberFormatting(activeCases);
+            totalCases = stringNumber.bigNumberFormatting(totalCases);
+            newCases = stringNumber.bigNumberFormatting(newCases);
+            totalDeaths = stringNumber.bigNumberFormatting(totalDeaths);
+            newDeaths = stringNumber.bigNumberFormatting(newDeaths);
+            totalRecovered = stringNumber.bigNumberFormatting(totalRecovered);
+            newRecovered = stringNumber.bigNumberFormatting(newRecovered);
+            totalTests = stringNumber.bigNumberFormatting(totalTests);
+
             setData(countryName,flagImage,activeCases,totalCases,newCases,totalDeaths,
                     newDeaths,totalRecovered, newRecovered,totalTests);
         }
