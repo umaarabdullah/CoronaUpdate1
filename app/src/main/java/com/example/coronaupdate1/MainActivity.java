@@ -123,7 +123,9 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.navigation_country:
                 Log.d("activityMain", "country nav button clicked ");
-                fragment = new CountryFragment(getApplicationContext(), countryDataList);
+                // using getApplicationContext() caused error when creating the detail screen
+                // but MainActivity.this fixed it
+                fragment = new CountryFragment(MainActivity.this, countryDataList);
                 Log.d("activityMain", "after using the countryFragment constructor ");
                 break;
 
