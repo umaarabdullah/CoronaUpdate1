@@ -79,6 +79,7 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
                 // display a toast with person name on item click
                 Toast.makeText(context, countryDataList.get(position).getCountryName(), Toast.LENGTH_SHORT).show();
 
+                // intent switching to another activity (CountryDetailActivity)
                 Intent intent = new Intent(context, CountryDetailActivity.class);
 
                 intent.putExtra("country_name", countryDataList.get(position).getCountryName());

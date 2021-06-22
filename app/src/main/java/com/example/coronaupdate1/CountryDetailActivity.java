@@ -1,9 +1,13 @@
 package com.example.coronaupdate1;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,6 +17,17 @@ import com.squareup.picasso.Picasso;
 public class CountryDetailActivity extends AppCompatActivity {
 
     private static final String TAG = "CountryDetailActivity";
+
+    private String countryName;
+    private String flagImage;
+    private String activeCases;
+    private String totalCases;
+    private String newCases;
+    private String totalDeaths;
+    private String newDeaths;
+    private String totalRecovered;
+    private String newRecovered;
+    private String totalTests;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,18 +50,19 @@ public class CountryDetailActivity extends AppCompatActivity {
                 && getIntent().hasExtra("new_recovered") && getIntent().hasExtra("total_tests")){
             Log.d(TAG, "getIncomingIntent: found intent extras");
 
-            String countryName = getIntent().getStringExtra("country_name");
-            String flagImage = getIntent().getStringExtra("flag_image");
-            String activeCases = getIntent().getStringExtra("active_cases");
-            String totalCases = getIntent().getStringExtra("total_cases");
-            String newCases = getIntent().getStringExtra("new_cases");
-            String totalDeaths = getIntent().getStringExtra("total_deaths");
-            String newDeaths = getIntent().getStringExtra("new_deaths");
-            String totalRecovered = getIntent().getStringExtra("total_recovered");
-            String newRecovered = getIntent().getStringExtra("new_recovered");
-            String totalTests = getIntent().getStringExtra("total_tests");
+            countryName = getIntent().getStringExtra("country_name");
+            flagImage = getIntent().getStringExtra("flag_image");
+            activeCases = getIntent().getStringExtra("active_cases");
+            totalCases = getIntent().getStringExtra("total_cases");
+            newCases = getIntent().getStringExtra("new_cases");
+            totalDeaths = getIntent().getStringExtra("total_deaths");
+            newDeaths = getIntent().getStringExtra("new_deaths");
+            totalRecovered = getIntent().getStringExtra("total_recovered");
+            newRecovered = getIntent().getStringExtra("new_recovered");
+            totalTests = getIntent().getStringExtra("total_tests");
 
             StringNumber stringNumber = new StringNumber();
+
             activeCases = stringNumber.bigNumberFormatting(activeCases);
             totalCases = stringNumber.bigNumberFormatting(totalCases);
             newCases = stringNumber.bigNumberFormatting(newCases);
@@ -56,14 +72,12 @@ public class CountryDetailActivity extends AppCompatActivity {
             newRecovered = stringNumber.bigNumberFormatting(newRecovered);
             totalTests = stringNumber.bigNumberFormatting(totalTests);
 
-            setData(countryName,flagImage,activeCases,totalCases,newCases,totalDeaths,
-                    newDeaths,totalRecovered, newRecovered,totalTests);
+            setData();
+
         }
     }
 
-    private void setData(String countryName, String flagImage, String activeCases, String totalCases, String newCases,
-                         String totalDeaths, String newDeaths, String totalRecovered, String newRecovered,
-                         String totalTests){
+    private void setData(){
 
         // setting the title of the actionBar on top to the countryName which was clicked
         getSupportActionBar().setTitle(countryName);
@@ -91,5 +105,37 @@ public class CountryDetailActivity extends AppCompatActivity {
         testsTotalView.setText(totalTests);
 
         Log.d(TAG, "setData: data assigned to textViews");
+    }
+
+    // create action bar button
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.country_detail_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    // handle button activities
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.graph_button) {
+            Log.d(TAG, "onOptionsItemSelected: Graph Button Clicked");
+            Intent intent = new Intent(getApplicationContext(), GraphModellingActivity.class);
+            startActivity(intent);
+            /*
+            intent.putExtra("country_name", countryName);
+            intent.putExtra("active_cases", activeCases);
+            intent.putExtra("total_cases", totalCases);
+            intent.putExtra("new_cases", newCases);
+            intent.putExtra("total_deaths", totalDeaths);
+            intent.putExtra("new_deaths", newDeaths);
+            intent.putExtra("total_recovered", totalRecovered);
+            intent.putExtra("new_recovered", newRecovered);
+            intent.putExtra("total_tests", totalTests);*/
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
