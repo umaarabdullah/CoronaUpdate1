@@ -38,7 +38,11 @@ public class CountryDetailActivity extends AppCompatActivity {
         // creating the up button or back button on the top action bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // get intent extras which were passed when this activity was started
         getIncomingIntent();
+
+        // setting the data received via intent extra to their respective views
+        setDataToViews();
     }
 
     private void getIncomingIntent(){
@@ -72,13 +76,11 @@ public class CountryDetailActivity extends AppCompatActivity {
             newRecovered = stringNumber.bigNumberFormatting(newRecovered);
             totalTests = stringNumber.bigNumberFormatting(totalTests);
 
-            setData();
-
         }
     }
 
-    private void setData(){
-
+    private void setDataToViews(){
+        Log.d(TAG, "setData: inside method");
         // setting the title of the actionBar on top to the countryName which was clicked
         getSupportActionBar().setTitle(countryName);
 
@@ -123,8 +125,7 @@ public class CountryDetailActivity extends AppCompatActivity {
         if (id == R.id.graph_button) {
             Log.d(TAG, "onOptionsItemSelected: Graph Button Clicked");
             Intent intent = new Intent(getApplicationContext(), GraphModellingActivity.class);
-            startActivity(intent);
-            /*
+
             intent.putExtra("country_name", countryName);
             intent.putExtra("active_cases", activeCases);
             intent.putExtra("total_cases", totalCases);
@@ -133,9 +134,18 @@ public class CountryDetailActivity extends AppCompatActivity {
             intent.putExtra("new_deaths", newDeaths);
             intent.putExtra("total_recovered", totalRecovered);
             intent.putExtra("new_recovered", newRecovered);
-            intent.putExtra("total_tests", totalTests);*/
+            intent.putExtra("total_tests", totalTests);
+
+            startActivity(intent);
 
         }
+
+        // making the up button do the same as back button
+        if(id == android.R.id.home){
+            onBackPressed();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 }
