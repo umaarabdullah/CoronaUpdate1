@@ -19,7 +19,10 @@ public class CountryDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_country_detail);
         Log.d(TAG, "onCreate: started");
-        
+
+        // creating the up button or back button on the top action bar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         getIncomingIntent();
     }
 
@@ -62,6 +65,9 @@ public class CountryDetailActivity extends AppCompatActivity {
                          String totalDeaths, String newDeaths, String totalRecovered, String newRecovered,
                          String totalTests){
 
+        // setting the title of the actionBar on top to the countryName which was clicked
+        getSupportActionBar().setTitle(countryName);
+
         TextView nameCountryView = findViewById(R.id.c_name_country);
         ImageView imageFlag = findViewById(R.id.c_flag_image);
         TextView casesActiveView = findViewById(R.id.c_active_cases_num);
@@ -86,5 +92,4 @@ public class CountryDetailActivity extends AppCompatActivity {
 
         Log.d(TAG, "setData: data assigned to textViews");
     }
-
 }

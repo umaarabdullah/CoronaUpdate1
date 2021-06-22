@@ -10,7 +10,7 @@ public class RetrofitClient {
 
     private RetrofitClient(){
         Retrofit retrofit = new Retrofit.Builder().baseUrl(covidApiInterface.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create()) // incoming data is in Json using the gsonConvertor library we are converting to pojo
                 .build();
         covidApiInterface = retrofit.create(CovidApiInterface.class);
     }

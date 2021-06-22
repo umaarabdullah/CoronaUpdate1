@@ -53,19 +53,23 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
     public void onBindViewHolder(@NonNull @NotNull MyViewHolder holder, final int position) {
 
         Log.d("customAdapterActivity", "inside onBindViewHolder before setting data");
+        // used for formatting number String
         StringNumber stringNumber = new StringNumber();
+
         // set the data
         holder.countryName.setText(countryDataList.get(position).getCountryName());
         Picasso.with(context).load(countryDataList.get(position).getCountryInfo().getFlag()).into(holder.countryFlagImage);
 
         String newCasesListScreen = Integer.toString(countryDataList.get(position).getNewCases());
         String newDeathsListScreen = Integer.toString(countryDataList.get(position).getNewDeaths());
+
         newCasesListScreen = stringNumber.bigNumberFormatting(newCasesListScreen);
         newDeathsListScreen = stringNumber.bigNumberFormatting(newDeathsListScreen);
 
         holder.dailyNewCases.setText("+" + newCasesListScreen);
         holder.dailyNewDeaths.setText("+" + newDeathsListScreen);
         Log.d(TAG, "inside onBindViewHolder after setting data");
+
         // implement setOnClickListener event on item view.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +80,7 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
                 Toast.makeText(context, countryDataList.get(position).getCountryName(), Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(context, CountryDetailActivity.class);
+
                 intent.putExtra("country_name", countryDataList.get(position).getCountryName());
                 intent.putExtra("flag_image", countryDataList.get(position).getCountryInfo().getFlag());
                 intent.putExtra("active_cases", Integer.toString(countryDataList.get(position).getActiveCases()));
@@ -86,6 +91,7 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
                 intent.putExtra("total_recovered", Integer.toString(countryDataList.get(position).getTotalRecovered()));
                 intent.putExtra("new_recovered", Integer.toString(countryDataList.get(position).getNewRecovered()));
                 intent.putExtra("total_tests", Integer.toString(countryDataList.get(position).getTotalTests()));
+
                 Log.d(TAG, "onClick: before startActivity");
                 context.startActivity(intent);
                 Log.d(TAG, "onClick: after Start Activity");
