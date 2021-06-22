@@ -118,14 +118,14 @@ public class MainActivity extends AppCompatActivity
         Log.d("activityMain", "navitemSelected Method ");
         switch (item.getItemId()){
             case R.id.navigation_global:
-                fragment = new GlobalFragment(globalData);
+                fragment = new GlobalFragment(globalData);  // passing GlobalData to GlobalFragment
                 break;
 
             case R.id.navigation_country:
                 Log.d("activityMain", "country nav button clicked ");
-                // using getApplicationContext() caused error when creating the detail screen
-                // but MainActivity.this fixed it
-                fragment = new CountryFragment(MainActivity.this, countryDataList);
+
+                // passing countryDataList to CountryFragment
+                fragment = new CountryFragment(MainActivity.this, countryDataList);     // using getApplicationContext() caused error when creating the detail screen  but MainActivity.this fixed it
                 Log.d("activityMain", "after using the countryFragment constructor ");
                 break;
 
