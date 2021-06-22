@@ -21,7 +21,7 @@ public class GraphModellingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph_modelling);
-        getActionBar().setTitle("Graphs");
+        getSupportActionBar().setTitle("Graphs");
         /*
         countryName = getIntent().getStringExtra("country_name");
         activeCases = getIntent().getStringExtra("active_cases");
