@@ -6,4 +6,15 @@
     <string name="tile_about">About</string>
     <string name="country_name_title">Country Name</string>
     <string name="daily_title">Daily New Cases/Deaths</string>
+
+    <!-- Conntry Detail Screen TextView Names-->
+    <string name="active_cases_title">Active Cases</string>
+    <string name="total_cases_title">Total Cases</string>
+    <string name="new_cases_title">New Cases</string>
+    <string name="total_deaths_title">Total Deaths</string>
+    <string name="new_deaths_title">New Deaths</string>
+    <string name="total_recovered_title">Total Recovered</string>
+    <string name="new_recovered_title">New Recovered</string>
+    <string name="total_tests_title">Total Tests</string>
+
 </resources>
