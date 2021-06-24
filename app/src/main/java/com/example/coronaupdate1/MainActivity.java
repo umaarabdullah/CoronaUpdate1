@@ -41,20 +41,24 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Log.d(TAG, "onCreate: ");
 
+        // called global data method before default screen but waiting for response
         getGlobalData();
-        Log.d(TAG, "called global data method before default screen but waiting for response");
+        Log.d(TAG, "");
+
+        // global data will be null as it hasn't been instanciated yet it is waiting for a response of the http call
         if(globalData == null)
             Log.d(TAG, "onCreate: globalData is null, has not been instanciated");
 
+        // bottomNavListener connected
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation_bar);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-        Log.d(TAG, "bottomNavListener connected: ");
 
+        // called all country data method but waiting for response
         getAllCountryData();
-        Log.d(TAG, "called all country data method but waiting for response");
 
+        // called bangladesh country data method but waiting for response
         getCountryData();
-        Log.d(TAG, "called bangladesh country data method but waiting for response");
+
     }
 
     public void getGlobalData(){
@@ -67,12 +71,12 @@ public class MainActivity extends AppCompatActivity
                 //default Fragment will be loaded when there is a response on the call of globalData
                 loadFragment(new GlobalFragment(globalData));
 
-                Log.d("Beef","Active Cases: " + globalData.getActiveCases());
-                Log.d("Beef","Total Cases: " + globalData.getTotalCases());
-                Log.d("Beef","Total Deaths: " + globalData.getTotalDeaths());
-                Log.d("Beef","Total Recovered: " + globalData.getTotalRecovered());
-                Log.d("Beef","New Cases: " + globalData.getNewCases());
-                Log.d("Beef","New Recovered: " + globalData.getNewRecovered());
+                Log.d("GlobalData","Active Cases: " + globalData.getActiveCases());
+                Log.d("GlobalData","Total Cases: " + globalData.getTotalCases());
+                Log.d("GlobalData","Total Deaths: " + globalData.getTotalDeaths());
+                Log.d("GlobalData","Total Recovered: " + globalData.getTotalRecovered());
+                Log.d("GlobalData","New Cases: " + globalData.getNewCases());
+                Log.d("GlobalData","New Recovered: " + globalData.getNewRecovered());
             }
 
             @Override
@@ -80,7 +84,6 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-        Log.d(TAG, "getGlobalData: return true place");
     }
 
     public void getAllCountryData(){
@@ -90,7 +93,8 @@ public class MainActivity extends AppCompatActivity
             public void onResponse(Call<List<CountryData>> call, Response<List<CountryData>> response) {
                 countryDataList = response.body();
 
-                Log.d("Mutton", "CountryName = " + countryDataList.get(1).getCountryName());
+                Log.d("CountryDataList", "CountryName at index 1 = "
+                        + countryDataList.get(1).getCountryName());
             }
 
             @Override
@@ -107,7 +111,7 @@ public class MainActivity extends AppCompatActivity
             public void onResponse(Call<CountryData> call, Response<CountryData> response) {
                 countryData = response.body();
 
-                Log.d("Sheek", "NewCases = " + countryData.getNewCases());
+                Log.d("CountryDataBD ", "NewCases = " + countryData.getNewCases());
             }
 
             @Override
@@ -119,19 +123,19 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull @NotNull MenuItem item) {
+
         Fragment fragment;
-        Log.d(TAG, "navitemSelected Method ");
+
+        // when a bottom navigation button is clicked this method is triggered
+        // and ascertains which button was click by using reference
         switch (item.getItemId()){
             case R.id.navigation_global:
                 fragment = new GlobalFragment(globalData);  // passing GlobalData to GlobalFragment
                 break;
 
             case R.id.navigation_country:
-                Log.d(TAG, "country nav button clicked ");
-
                 // passing countryDataList to CountryFragment
                 fragment = new CountryFragment(MainActivity.this, countryDataList);     // using getApplicationContext() caused error when creating the detail screen  but MainActivity.this fixed it
-                Log.d(TAG, "after using the countryFragment constructor ");
                 break;
 
             case R.id.navigation_about:
@@ -140,19 +144,20 @@ public class MainActivity extends AppCompatActivity
             default:
                 throw new IllegalStateException("Unexpected value: " + item.getItemId());
         }
+
         return loadFragment(fragment);
     }
 
     private boolean loadFragment(Fragment fragment){
-        Log.d(TAG, "inside loadFragment ");
+
         //switching fragments
         if(fragment != null){
-            Log.d(TAG, "in fragment not null before method calls ");
+
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.navigation_container, fragment)
                     .commit();
-            Log.d(TAG, "in fragment not null after method calls ");
+
             return true;
         }
         return false;

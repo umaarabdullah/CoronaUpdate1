@@ -31,14 +31,12 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                 } finally {
                     finish();
-                    Log.d(TAG, "run: finished splash screen displaying finally statement");
+                    // launching the MainActivity after the splash screen has launched
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 }
             }
         };
-        Log.d(TAG, "onCreate: before staring splashScreenThread");
         splashScreenThread.start();
 
-        Log.d(TAG, "onCreate: SplashScreenActivity thread started");
     }
 }

@@ -34,7 +34,6 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
     public CustomCountryAdapter(Context context, List<CountryData> countryDataList){
         this.countryDataList = countryDataList;
         this.context = context;
-        Log.d(TAG, "inside customCountryAdapter constructor");
     }
 
 
@@ -46,6 +45,7 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
         View view = LayoutInflater.from(context).inflate(R.layout.country_item_row_layout,
                 parent, false);
 
+        // getting the 3 ArrayLists
         getAttributeArrayLists();
 
         // set the view's size, margins, paddings and layout parameters
@@ -57,33 +57,35 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
     @Override
     public void onBindViewHolder(@NonNull @NotNull MyViewHolder holder, final int position) {
 
-        Log.d("customAdapterActivity", "inside onBindViewHolder before setting data");
         // used for formatting number String
         StringNumber stringNumber = new StringNumber();
 
-        // set the data
+        // setting the data to the views
         holder.countryName.setText(countryDataList.get(position).getCountryName());
         Picasso.with(context).load(countryDataList.get(position).getCountryInfo().getFlag()).into(holder.countryFlagImage);
 
+        // newCases and newDeaths for each country row item
         String newCasesListScreen = Integer.toString(countryDataList.get(position).getNewCases());
         String newDeathsListScreen = Integer.toString(countryDataList.get(position).getNewDeaths());
 
+        // formatting the numbers so that they have the appropriate commas in between the digits
         newCasesListScreen = stringNumber.bigNumberFormatting(newCasesListScreen);
         newDeathsListScreen = stringNumber.bigNumberFormatting(newDeathsListScreen);
 
         holder.dailyNewCases.setText("+" + newCasesListScreen);     // setting newCases for each country item
         holder.dailyNewDeaths.setText("+" + newDeathsListScreen);   // setting newDeaths for each country item
-        Log.d(TAG, "inside onBindViewHolder after setting data");
 
         // implement setOnClickListener event on item view.
+        // setting a Click listener so that when a country row item is clicked we can handle it
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, ""+ countryDataList.get(position).getCountryName() );
+                Log.d(TAG, "Country Clicked"+ countryDataList.get(position).getCountryName() );
 
                 // display a toast with person name on item click
                 Toast.makeText(context, countryDataList.get(position).getCountryName(), Toast.LENGTH_SHORT).show();
 
+                // when clicked on a country row item that country's detail activity will be launched
                 // intent switching to another activity (CountryDetailActivity)
                 Intent intent = new Intent(context, CountryDetailActivity.class);
 
@@ -102,21 +104,19 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
                 intent.putStringArrayListExtra("new_cases_array_list", newCasesArrayList);
                 intent.putStringArrayListExtra("new_deaths_array_list", newDeathsArrayList);
 
-                Log.d(TAG, "onClick: before startActivity");
                 context.startActivity(intent);
-                Log.d(TAG, "onClick: after Start Activity");
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        Log.d(TAG, "inside getItemCount");
+
         if(countryDataList == null) {
-            Log.d("getItemCount: NullCheck", "NULL List");
+            Log.d(TAG, "getItemCount: NULL List");
             return 0;
         }
-        Log.d(TAG, " " + countryDataList.isEmpty());
+
         return countryDataList.size();
     }
 
