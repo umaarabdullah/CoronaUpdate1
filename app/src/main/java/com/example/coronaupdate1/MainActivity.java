@@ -42,21 +42,19 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "onCreate: ");
 
         getGlobalData();
-        Log.d(TAG, "got global data before default screen ");
-        //default Fragment
-        loadFragment(new GlobalFragment(globalData));
+        Log.d(TAG, "called global data method before default screen but waiting for response");
+        if(globalData == null)
+            Log.d(TAG, "onCreate: globalData is null, has not been instanciated");
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation_bar);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         Log.d(TAG, "bottomNavListener connected: ");
 
-        Log.d(TAG, "onCreate: SplashScreenActivity Thread");
-        startActivity(new Intent(this, SplashScreenActivity.class));
-
         getAllCountryData();
-        Log.d(TAG, "got all country data ");
+        Log.d(TAG, "called all country data method but waiting for response");
+
         getCountryData();
-        Log.d(TAG, "got bangladesh country data ");
+        Log.d(TAG, "called bangladesh country data method but waiting for response");
     }
 
     public void getGlobalData(){
@@ -65,6 +63,9 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onResponse(Call<GlobalData> call, Response<GlobalData> response) {
                 globalData = response.body();
+
+                //default Fragment will be loaded when there is a response on the call of globalData
+                loadFragment(new GlobalFragment(globalData));
 
                 Log.d("Beef","Active Cases: " + globalData.getActiveCases());
                 Log.d("Beef","Total Cases: " + globalData.getTotalCases());
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+        Log.d(TAG, "getGlobalData: return true place");
     }
 
     public void getAllCountryData(){
