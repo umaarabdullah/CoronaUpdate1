@@ -1,5 +1,354 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="99dp"
+        android:layout_height="76dp"
+        android:layout_marginStart="156dp"
+        android:layout_marginTop="79dp"
+        android:layout_marginEnd="156dp"
+        android:layout_marginBottom="576dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/globe_image" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="131dp"
+        android:layout_marginTop="160dp"
+        android:layout_marginEnd="132dp"
+        android:layout_marginBottom="539dp"
+        android:text="Global Report"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="40dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="39dp"
+        android:layout_marginTop="214dp"
+        android:layout_marginEnd="332dp"
+        android:layout_marginBottom="480dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/active_cases" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="40dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="39dp"
+        android:layout_marginTop="275dp"
+        android:layout_marginEnd="332dp"
+        android:layout_marginBottom="419dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/total_cases" />
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="40dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="39dp"
+        android:layout_marginTop="336dp"
+        android:layout_marginEnd="332dp"
+        android:layout_marginBottom="358dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/total_death" />
+
+    <ImageView
+        android:id="@+id/imageView8"
+        android:layout_width="40dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="39dp"
+        android:layout_marginTop="396dp"
+        android:layout_marginEnd="332dp"
+        android:layout_marginBottom="298dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/total_recovered" />
+
+    <ImageView
+        android:id="@+id/imageView16"
+        android:layout_width="40dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="39dp"
+        android:layout_marginTop="459dp"
+        android:layout_marginEnd="332dp"
+        android:layout_marginBottom="235dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/daily_new_cases" />
+
+    <ImageView
+        android:id="@+id/imageView17"
+        android:layout_width="40dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="39dp"
+        android:layout_marginTop="578dp"
+        android:layout_marginEnd="332dp"
+        android:layout_marginBottom="116dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/daily_recovered" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="165dp"
+        android:layout_marginTop="222dp"
+        android:layout_marginEnd="163dp"
+        android:layout_marginBottom="490dp"
+        android:text="Active Cases"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="168dp"
+        android:layout_marginTop="285dp"
+        android:layout_marginEnd="169dp"
+        android:layout_marginBottom="427dp"
+        android:text="Total Cases"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="166dp"
+        android:layout_marginTop="343dp"
+        android:layout_marginEnd="165dp"
+        android:layout_marginBottom="369dp"
+        android:text="Total Deaths"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="156dp"
+        android:layout_marginTop="404dp"
+        android:layout_marginEnd="152dp"
+        android:layout_marginBottom="308dp"
+        android:text="Total Recovered"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="156dp"
+        android:layout_marginTop="468dp"
+        android:layout_marginEnd="150dp"
+        android:layout_marginBottom="244dp"
+        android:text="Daily New Cases"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="139dp"
+        android:layout_marginTop="585dp"
+        android:layout_marginEnd="138dp"
+        android:layout_marginBottom="127dp"
+        android:text="Daily New Recovered"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="326dp"
+        android:layout_marginTop="222dp"
+        android:layout_marginEnd="27dp"
+        android:layout_marginBottom="490dp"
+        android:text="TextView"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="326dp"
+        android:layout_marginTop="285dp"
+        android:layout_marginEnd="27dp"
+        android:layout_marginBottom="427dp"
+        android:text="TextView"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="326dp"
+        android:layout_marginTop="343dp"
+        android:layout_marginEnd="27dp"
+        android:layout_marginBottom="369dp"
+        android:text="TextView"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="326dp"
+        android:layout_marginTop="404dp"
+        android:layout_marginEnd="27dp"
+        android:layout_marginBottom="308dp"
+        android:text="TextView"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="326dp"
+        android:layout_marginTop="468dp"
+        android:layout_marginEnd="27dp"
+        android:layout_marginBottom="244dp"
+        android:text="TextView"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="326dp"
+        android:layout_marginTop="585dp"
+        android:layout_marginEnd="27dp"
+        android:layout_marginBottom="127dp"
+        android:text="TextView"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView19"
+        android:layout_width="40dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="39dp"
+        android:layout_marginTop="522dp"
+        android:layout_marginEnd="332dp"
+        android:layout_marginBottom="172dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/death_icon" />
+
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="151dp"
+        android:layout_marginTop="533dp"
+        android:layout_marginEnd="149dp"
+        android:layout_marginBottom="179dp"
+        android:text="Daily New Deaths"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView19"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="329dp"
+        android:layout_marginTop="531dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="181dp"
+        android:text="TextView"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
