@@ -26,6 +26,7 @@ import com.example.coronaupdate1.R;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CountryFragment extends Fragment {
@@ -33,6 +34,9 @@ public class CountryFragment extends Fragment {
     private static final String TAG = "CountryFragment";
     private final Context context;
     private final List<CountryData> countryDataList;
+    private ArrayList<String> countryNamesArrayList = new ArrayList<String>();
+    private ArrayList<String> newCasesArrayList = new ArrayList<String>();
+    private ArrayList<String> newDeathsArrayList = new ArrayList<String>();
 
     public CountryFragment(Context context, List<CountryData> countryDataList){
         this.context = context;
@@ -48,6 +52,9 @@ public class CountryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_country, null);
 
         setHasOptionsMenu(true);
+
+        // get the ArrayList<String> of countryName, newCases, NewDeaths
+        getAttributeArrayLists();
 
         // get the reference of the recyclerView
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
@@ -100,7 +107,7 @@ public class CountryFragment extends Fragment {
             if(countryDataList.get(i).getCountryName().toLowerCase().equals(query.toLowerCase())){
                 Log.d(TAG, "queryProcessing: true case");
                 // intent switching to another activity (CountryDetailActivity)
-                Intent intent = new Intent(context, CountryDetailActivity.class);
+                Intent intent = new Intent(getContext(), CountryDetailActivity.class);
 
                 intent.putExtra("country_name", countryDataList.get(i).getCountryName());
                 intent.putExtra("flag_image", countryDataList.get(i).getCountryInfo().getFlag());
@@ -113,6 +120,10 @@ public class CountryFragment extends Fragment {
                 intent.putExtra("new_recovered", Integer.toString(countryDataList.get(i).getNewRecovered()));
                 intent.putExtra("total_tests", Integer.toString(countryDataList.get(i).getTotalTests()));
 
+                intent.putStringArrayListExtra("country_name_array_list", countryNamesArrayList);
+                intent.putStringArrayListExtra("new_cases_array_list", newCasesArrayList);
+                intent.putStringArrayListExtra("new_deaths_array_list", newDeathsArrayList);
+
                 Log.d(TAG, "queryProcessing: before startActivity");
                 context.startActivity(intent);
                 Log.d(TAG, "queryProcessing: after startActivity");
@@ -120,6 +131,16 @@ public class CountryFragment extends Fragment {
                 break;
             }
         }
+    }
+
+    private ArrayList<String> getAttributeArrayLists() {
+        for (int i = 0; i<countryDataList.size(); i++){
+
+            countryNamesArrayList.add(countryDataList.get(i).getCountryName() );
+            newCasesArrayList.add(Integer.toString(countryDataList.get(i).getNewCases()));
+            newDeathsArrayList.add(Integer.toString(countryDataList.get(i).getNewDeaths()));
+        }
+        return countryNamesArrayList;
     }
 
 }
