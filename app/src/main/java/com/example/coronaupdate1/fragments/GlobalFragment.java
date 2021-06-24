@@ -55,7 +55,7 @@ public class GlobalFragment extends Fragment {
         int id = item.getItemId();
 
         if(id == R.id.graph_button_global){
-            Log.d(TAG, "onOptionsItemSelected: ");
+            Log.d(TAG, "onOptionsItemSelected: Graph button clicked");
             Toast.makeText(getContext(), "Graph Selected" , Toast.LENGTH_SHORT).show();
 
             return  true;

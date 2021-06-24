@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -29,6 +30,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener{
 
+    private static final String TAG = "MainActivity";
     private List<CountryData> countryDataList;
     private GlobalData globalData;
     private CountryData countryData;
@@ -37,23 +39,24 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d("activityMain", "onCreate: ");
+        Log.d(TAG, "onCreate: ");
 
         getGlobalData();
-        Log.d("activityMain", "got global data before default screen ");
+        Log.d(TAG, "got global data before default screen ");
         //default Fragment
         loadFragment(new GlobalFragment(globalData));
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation_bar);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-        Log.d("activityMain", "bottomNavListener connected: ");
+        Log.d(TAG, "bottomNavListener connected: ");
 
-        //getGlobalData();
-        //Log.d("activityMain", "got global data ");
+        Log.d(TAG, "onCreate: SplashScreenActivity Thread");
+        startActivity(new Intent(this, SplashScreenActivity.class));
+
         getAllCountryData();
-        Log.d("activityMain", "got all country data ");
+        Log.d(TAG, "got all country data ");
         getCountryData();
-        Log.d("activityMain", "got bangladesh country data ");
+        Log.d(TAG, "got bangladesh country data ");
     }
 
     public void getGlobalData(){
@@ -115,18 +118,18 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull @NotNull MenuItem item) {
         Fragment fragment;
-        Log.d("activityMain", "navitemSelected Method ");
+        Log.d(TAG, "navitemSelected Method ");
         switch (item.getItemId()){
             case R.id.navigation_global:
                 fragment = new GlobalFragment(globalData);  // passing GlobalData to GlobalFragment
                 break;
 
             case R.id.navigation_country:
-                Log.d("activityMain", "country nav button clicked ");
+                Log.d(TAG, "country nav button clicked ");
 
                 // passing countryDataList to CountryFragment
                 fragment = new CountryFragment(MainActivity.this, countryDataList);     // using getApplicationContext() caused error when creating the detail screen  but MainActivity.this fixed it
-                Log.d("activityMain", "after using the countryFragment constructor ");
+                Log.d(TAG, "after using the countryFragment constructor ");
                 break;
 
             case R.id.navigation_about:
@@ -139,15 +142,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean loadFragment(Fragment fragment){
-        Log.d("activityMain", "inside loadFragment ");
+        Log.d(TAG, "inside loadFragment ");
         //switching fragments
         if(fragment != null){
-            Log.d("activityMain", "in fragment not null before method calls ");
+            Log.d(TAG, "in fragment not null before method calls ");
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.navigation_container, fragment)
                     .commit();
-            Log.d("activityMain", "in fragment not null after method calls ");
+            Log.d(TAG, "in fragment not null after method calls ");
             return true;
         }
         return false;

@@ -4,22 +4,39 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+import android.util.Log;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
+    private static final String TAG = "SplashScreenActivity";
+
+    int _splashTime = 2000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        new Handler().postDelayed(new Runnable() {
+        Thread splashScreenThread = new Thread(){
             @Override
             public void run() {
-                Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
+                try {
+                    int waited = 0;
+                    while(waited < _splashTime) {
+                        sleep(100);
+                        waited += 100;
+                        Log.d(TAG, "run: waiting...");
+                    }
+                } catch (InterruptedException e){
+
+                } finally {
+                    finish();
+                    Log.d(TAG, "run: finished splash screen displaying finally statement");
+                }
             }
-        }, 4000);
+        };
+        splashScreenThread.start();
+
+        Log.d(TAG, "onCreate: SplashScreenActivity thread started");
+
     }
 }
