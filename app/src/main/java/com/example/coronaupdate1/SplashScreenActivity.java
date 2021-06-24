@@ -15,6 +15,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+        Log.d(TAG, "onCreate: ");
 
         Thread splashScreenThread = new Thread(){
             @Override
@@ -31,12 +32,13 @@ public class SplashScreenActivity extends AppCompatActivity {
                 } finally {
                     finish();
                     Log.d(TAG, "run: finished splash screen displaying finally statement");
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 }
             }
         };
+        Log.d(TAG, "onCreate: before staring splashScreenThread");
         splashScreenThread.start();
 
         Log.d(TAG, "onCreate: SplashScreenActivity thread started");
-
     }
 }

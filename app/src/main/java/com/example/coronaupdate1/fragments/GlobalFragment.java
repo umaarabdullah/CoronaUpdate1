@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.coronaupdate1.DataModel.GlobalData;
 import com.example.coronaupdate1.R;
+import com.example.coronaupdate1.utility.StringNumber;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -37,6 +39,31 @@ public class GlobalFragment extends Fragment {
 
         // to make the options (graph button) appear in your Toolbar
         setHasOptionsMenu(true);
+
+        StringNumber stringNumber = new StringNumber();
+        
+        TextView globalActiveCasesView = view.findViewById(R.id.global_active_cases);
+        globalActiveCasesView.setText(stringNumber.bigNumberFormatting(Integer.toString(globalData.getActiveCases())));
+
+
+        TextView globalTotalCasesView = view.findViewById(R.id.global_total_cases);
+        globalTotalCasesView.setText(stringNumber.bigNumberFormatting(Integer.toString(globalData.getTotalCases())));
+
+
+        TextView globalTotalDeathsView = view.findViewById(R.id.global_total_deaths);
+        globalTotalDeathsView.setText(stringNumber.bigNumberFormatting(Integer.toString(globalData.getTotalDeaths())));
+
+
+        TextView globalTotalRecooveredView = view.findViewById(R.id.global_total_recovered);
+        globalTotalRecooveredView.setText(stringNumber.bigNumberFormatting(Integer.toString(globalData.getTotalRecovered())));
+
+
+        TextView globalDailyNewCasesView = view.findViewById(R.id.global_daily_new_cases);
+        globalDailyNewCasesView.setText(stringNumber.bigNumberFormatting(Integer.toString(globalData.getNewCases())));
+
+
+        TextView globalDailyNewRecoveredView = view.findViewById(R.id.global_daily_new_recovered);
+        globalDailyNewRecoveredView.setText(stringNumber.bigNumberFormatting(Integer.toString(globalData.getNewRecovered())));
 
         return view;
     }
