@@ -64,8 +64,6 @@ public class GraphModellingActivity extends AppCompatActivity {
             totalTests = getIntent().getStringExtra("total_tests");
             Log.d(TAG, "onCreate: intent recieved " + countryName);
 
-
-
             // getting the current date
             Date date = Calendar.getInstance().getTime();
             Log.d(TAG, "onCreate: current time -> " + date);
@@ -73,6 +71,7 @@ public class GraphModellingActivity extends AppCompatActivity {
             // date is formatted as Ex : 28-Dec-2020
             String formattedDate = simpleDateFormat.format(date);
 
+            // Column Chart using anyChart
             AnyChartView anyChartView = findViewById(R.id.any_chart_view);
             anyChartView.setProgressBar(findViewById(R.id.progress_bar));
 
