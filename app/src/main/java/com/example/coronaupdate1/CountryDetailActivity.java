@@ -15,6 +15,8 @@ import android.widget.Toast;
 import com.example.coronaupdate1.utility.StringNumber;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 public class CountryDetailActivity extends AppCompatActivity {
 
     private static final String TAG = "CountryDetailActivity";
@@ -29,6 +31,9 @@ public class CountryDetailActivity extends AppCompatActivity {
     private String totalRecovered;
     private String newRecovered;
     private String totalTests;
+    private ArrayList<String> countryNamesArrayList = new ArrayList<String>();
+    private ArrayList<String> newCasesArrayList = new ArrayList<String>();
+    private ArrayList<String> newDeathsArrayList = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +57,14 @@ public class CountryDetailActivity extends AppCompatActivity {
                 && getIntent().hasExtra("active_cases") && getIntent().hasExtra("total_cases")
                 && getIntent().hasExtra("new_cases") && getIntent().hasExtra("total_deaths")
                 && getIntent().hasExtra("new_deaths") && getIntent().hasExtra("total_recovered")
-                && getIntent().hasExtra("new_recovered") && getIntent().hasExtra("total_tests")){
+                && getIntent().hasExtra("new_recovered") && getIntent().hasExtra("total_tests")
+                && getIntent().hasExtra("country_name_array_list")
+                && getIntent().hasExtra("new_cases_array_list")
+                && getIntent().hasExtra("new_deaths_array_list")){
+
             Log.d(TAG, "getIncomingIntent: found intent extras");
 
+            // incoming data passed into the intent
             countryName = getIntent().getStringExtra("country_name");
             flagImage = getIntent().getStringExtra("flag_image");
             activeCases = getIntent().getStringExtra("active_cases");
@@ -65,6 +75,10 @@ public class CountryDetailActivity extends AppCompatActivity {
             totalRecovered = getIntent().getStringExtra("total_recovered");
             newRecovered = getIntent().getStringExtra("new_recovered");
             totalTests = getIntent().getStringExtra("total_tests");
+
+            countryNamesArrayList = getIntent().getStringArrayListExtra("country_name_array_list");
+            newCasesArrayList = getIntent().getStringArrayListExtra("new_cases_array_list");
+            newDeathsArrayList = getIntent().getStringArrayListExtra("new_deaths_array_list");
 
             StringNumber stringNumber = new StringNumber();
 
@@ -125,10 +139,11 @@ public class CountryDetailActivity extends AppCompatActivity {
 
         if (id == R.id.graph_button) {
             Log.d(TAG, "onOptionsItemSelected: Graph Button Clicked");
-            Toast.makeText(this, "Graph Selected" , Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Graph" , Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(getApplicationContext(), GraphModellingActivity.class);
 
+            // putting data in intent to pass to next activity
             intent.putExtra("country_name", countryName);
             intent.putExtra("active_cases", activeCases);
             intent.putExtra("total_cases", totalCases);
@@ -138,6 +153,10 @@ public class CountryDetailActivity extends AppCompatActivity {
             intent.putExtra("total_recovered", totalRecovered);
             intent.putExtra("new_recovered", newRecovered);
             intent.putExtra("total_tests", totalTests);
+
+            intent.putStringArrayListExtra("country_name_array_list", countryNamesArrayList);
+            intent.putStringArrayListExtra("new_cases_array_list", newCasesArrayList);
+            intent.putStringArrayListExtra("new_deaths_array_list", newDeathsArrayList);
 
             startActivity(intent);
 

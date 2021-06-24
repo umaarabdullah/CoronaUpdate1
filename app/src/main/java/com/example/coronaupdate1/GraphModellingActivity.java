@@ -38,6 +38,9 @@ public class GraphModellingActivity extends AppCompatActivity {
     private String totalRecovered;
     private String newRecovered;
     private String totalTests;
+    private ArrayList<String> countryNamesArrayList = new ArrayList<String>();
+    private ArrayList<String> newCasesArrayList = new ArrayList<String>();
+    private ArrayList<String> newDeathsArrayList = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +54,10 @@ public class GraphModellingActivity extends AppCompatActivity {
                 && getIntent().hasExtra("total_cases") && getIntent().hasExtra("new_cases")
                 && getIntent().hasExtra("total_deaths") && getIntent().hasExtra("new_deaths")
                 && getIntent().hasExtra("total_recovered") && getIntent().hasExtra("new_recovered")
-                && getIntent().hasExtra("total_tests")){
+                && getIntent().hasExtra("total_tests")
+                && getIntent().hasExtra("country_name_array_list")
+                && getIntent().hasExtra("new_cases_array_list")
+                && getIntent().hasExtra("new_deaths_array_list")){
 
             countryName = getIntent().getStringExtra("country_name");
             activeCases = getIntent().getStringExtra("active_cases");
@@ -62,6 +68,10 @@ public class GraphModellingActivity extends AppCompatActivity {
             totalRecovered = getIntent().getStringExtra("total_recovered");
             newRecovered = getIntent().getStringExtra("new_recovered");
             totalTests = getIntent().getStringExtra("total_tests");
+
+            countryNamesArrayList = getIntent().getStringArrayListExtra("country_name_array_list");
+            newCasesArrayList = getIntent().getStringArrayListExtra("new_cases_array_list");
+            newDeathsArrayList = getIntent().getStringArrayListExtra("new_deaths_array_list");
             Log.d(TAG, "onCreate: intent recieved " + countryName);
 
             // getting the current date
@@ -78,10 +88,19 @@ public class GraphModellingActivity extends AppCompatActivity {
             Cartesian cartesian = AnyChart.column();
 
             List<DataEntry> casesData = new ArrayList<>();
-            casesData.add(new ValueDataEntry(formattedDate, 80540));
-            casesData.add(new ValueDataEntry("24/6/21", 70540));
-            casesData.add(new ValueDataEntry("25/6/21", 70540));
-            casesData.add(new ValueDataEntry("26/6/21", 8923));
+            int countEntries=0;
+
+            // gets data from the 1st 42 entries6
+            for (int i=0; i<countryNamesArrayList.size(); i++){
+                if(Integer.parseInt(newCasesArrayList.get(i)) != 0){
+                    countEntries++;
+                    casesData.add( new ValueDataEntry(countryNamesArrayList.get(i),
+                            Integer.parseInt(newCasesArrayList.get(i))) );
+                    Log.d(TAG, "onCreate: countryName " + countryNamesArrayList.get(i) + " Cases " + newCasesArrayList.get(i));
+                }
+                if(countEntries == 42) break;
+            }
+            Log.d(TAG, "onCreate: X and Y axis data assigned");
 
             Column column = cartesian.column(casesData);
 
@@ -94,7 +113,7 @@ public class GraphModellingActivity extends AppCompatActivity {
                     .format("{%Value}{groupsSeparator: }");
 
             cartesian.animation(true);
-            cartesian.title("Daily New Cases");
+            cartesian.title("New Cases (Date: " + formattedDate + ")");
 
             cartesian.yScale().minimum(0d);
 
@@ -103,11 +122,11 @@ public class GraphModellingActivity extends AppCompatActivity {
             cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
             cartesian.interactivity().hoverMode(HoverMode.BY_X);
 
-            cartesian.xAxis(0).title("Date");
+            cartesian.xAxis(0).title("CountryName");
             cartesian.yAxis(0).title("Cases");
 
             anyChartView.setChart(cartesian);
-
+            Log.d(TAG, "onCreate: anyChartView set !");
         }
 
     }
