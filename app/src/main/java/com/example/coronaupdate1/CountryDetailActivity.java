@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.coronaupdate1.utility.StringNumber;
 import com.squareup.picasso.Picasso;
@@ -116,7 +117,7 @@ public class CountryDetailActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    // handle button activities
+    // handle action bar button activities
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
@@ -124,6 +125,8 @@ public class CountryDetailActivity extends AppCompatActivity {
 
         if (id == R.id.graph_button) {
             Log.d(TAG, "onOptionsItemSelected: Graph Button Clicked");
+            Toast.makeText(this, "Graph Selected" , Toast.LENGTH_SHORT).show();
+
             Intent intent = new Intent(getApplicationContext(), GraphModellingActivity.class);
 
             intent.putExtra("country_name", countryName);
