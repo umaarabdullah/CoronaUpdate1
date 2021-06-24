@@ -19,6 +19,7 @@ import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdapter.MyViewHolder> {
@@ -26,6 +27,9 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
     private static final String TAG = "CustomAdapter";
     private final Context context;
     private final List<CountryData> countryDataList;
+    private final ArrayList<String> countryNamesArrayList = new ArrayList<String>();
+    private final ArrayList<String> newCasesArrayList = new ArrayList<String>();
+    private final ArrayList<String> newDeathsArrayList = new ArrayList<String>();
 
     public CustomCountryAdapter(Context context, List<CountryData> countryDataList){
         this.countryDataList = countryDataList;
@@ -41,11 +45,12 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
         // inflate the item Layout xml
         View view = LayoutInflater.from(context).inflate(R.layout.country_item_row_layout,
                 parent, false);
-        Log.d(TAG, "inside on_createViewHolder after assigning layoutInflater to view");
+
+        getAttributeArrayLists();
+
         // set the view's size, margins, paddings and layout parameters
-        Log.d(TAG, "inside on_createViewHolder before calling MyviewHolder constructor");
         MyViewHolder myViewHolder = new MyViewHolder(view); // pass the view to View Holder
-        Log.d(TAG, "inside on_createViewHolder after calling MyviewHolder constructor");
+
         return myViewHolder;
     }
 
@@ -66,8 +71,8 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
         newCasesListScreen = stringNumber.bigNumberFormatting(newCasesListScreen);
         newDeathsListScreen = stringNumber.bigNumberFormatting(newDeathsListScreen);
 
-        holder.dailyNewCases.setText("+" + newCasesListScreen);
-        holder.dailyNewDeaths.setText("+" + newDeathsListScreen);
+        holder.dailyNewCases.setText("+" + newCasesListScreen);     // setting newCases for each country item
+        holder.dailyNewDeaths.setText("+" + newDeathsListScreen);   // setting newDeaths for each country item
         Log.d(TAG, "inside onBindViewHolder after setting data");
 
         // implement setOnClickListener event on item view.
@@ -92,6 +97,10 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
                 intent.putExtra("total_recovered", Integer.toString(countryDataList.get(position).getTotalRecovered()));
                 intent.putExtra("new_recovered", Integer.toString(countryDataList.get(position).getNewRecovered()));
                 intent.putExtra("total_tests", Integer.toString(countryDataList.get(position).getTotalTests()));
+
+                intent.putStringArrayListExtra("country_name_array_list", countryNamesArrayList);
+                intent.putStringArrayListExtra("new_cases_array_list", newCasesArrayList);
+                intent.putStringArrayListExtra("new_deaths_array_list", newDeathsArrayList);
 
                 Log.d(TAG, "onClick: before startActivity");
                 context.startActivity(intent);
@@ -129,4 +138,15 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
             dailyNewDeaths = (TextView) itemView.findViewById(R.id.daily_new_deaths);
         }
     }
+
+    private ArrayList<String> getAttributeArrayLists() {
+        for (int i = 0; i<countryDataList.size(); i++){
+
+            countryNamesArrayList.add(countryDataList.get(i).getCountryName() );
+            newCasesArrayList.add(Integer.toString(countryDataList.get(i).getNewCases()));
+            newDeathsArrayList.add(Integer.toString(countryDataList.get(i).getNewDeaths()));
+        }
+        return countryNamesArrayList;
+    }
+
 }
