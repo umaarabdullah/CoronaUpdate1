@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -37,7 +38,33 @@ public class GlobalFragment extends Fragment {
 
         // to make the options (graph button) appear in your Toolbar
         setHasOptionsMenu(true);
+        
+        TextView globalActiveCasesView = view.findViewById(R.id.global_active_cases);
+        globalActiveCasesView.setText(Integer.toString(globalData.getActiveCases()));
 
+
+        TextView globalTotalCasesView = view.findViewById(R.id.global_total_cases);
+        globalActiveCasesView.setText(Integer.toString(globalData.getActiveCases()));
+
+
+        TextView globalTotalDeathsView = view.findViewById(R.id.global_total_deaths);
+        globalActiveCasesView.setText(Integer.toString(globalData.getActiveCases()));
+
+
+        TextView globalTotalRecooveredView = view.findViewById(R.id.global_total_recovered);
+        globalActiveCasesView.setText(Integer.toString(globalData.getActiveCases()));
+
+
+        TextView globalDailyNewCasesView = view.findViewById(R.id.global_daily_new_cases);
+        globalActiveCasesView.setText(Integer.toString(globalData.getActiveCases()));
+
+
+        TextView globalDailyNewDeathsView = view.findViewById(R.id.global_daily_new_deaths);
+        globalActiveCasesView.setText(Integer.toString(globalData.getActiveCases()));
+
+
+        TextView globalDailyNewRecoveredView = view.findViewById(R.id.global_daily_new_recovered);
+        globalActiveCasesView.setText(Integer.toString(globalData.getActiveCases()));
         return view;
     }
 
