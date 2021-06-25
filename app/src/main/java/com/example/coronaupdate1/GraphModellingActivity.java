@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
@@ -86,8 +85,8 @@ public class GraphModellingActivity extends AppCompatActivity {
 
 
             // Column Chart using anyChart
-            AnyChartView anyChartView = findViewById(R.id.any_chart_view);
-            anyChartView.setProgressBar(findViewById(R.id.progress_bar));
+            AnyChartView anyChartView = findViewById(R.id.any_chart_view_global);
+            anyChartView.setProgressBar(findViewById(R.id.progress_bar_global));
 
             Cartesian cartesian = AnyChart.column();
 
