@@ -1,5 +1,6 @@
 package com.example.coronaupdate1.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.coronaupdate1.DataModel.GlobalData;
+import com.example.coronaupdate1.GraphGlobalCases;
 import com.example.coronaupdate1.R;
 import com.example.coronaupdate1.utility.StringNumber;
 
@@ -83,9 +85,19 @@ public class GlobalFragment extends Fragment {
 
         int id = item.getItemId();
 
+        // if the graph button in the action bar is clicked the following will be done
         if(id == R.id.graph_button_global){
             Log.d(TAG, "onOptionsItemSelected: Graph button clicked");
-            Toast.makeText(getContext(), "Graph Selected" , Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Graph" , Toast.LENGTH_SHORT).show();
+
+            // passing data to the next activity
+            Intent intent = new Intent(getContext(), GraphGlobalCases.class);
+            intent.putExtra("total_cases", Integer.toString(globalData.getTotalCases()));
+            intent.putExtra("active_cases", Integer.toString(globalData.getActiveCases()));
+            intent.putExtra("total_deaths", Integer.toString(globalData.getTotalDeaths()));
+            intent.putExtra("total_recovered", Integer.toString(globalData.getTotalRecovered()));
+
+            startActivity(intent);
 
             return  true;
         }
