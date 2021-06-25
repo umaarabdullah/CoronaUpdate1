@@ -52,7 +52,7 @@ public class CountryDetailActivity extends AppCompatActivity {
     }
 
     private void getIncomingIntent(){
-        Log.d(TAG, "getIncomingIntent: checking for incoming intent and it's corresponding data");
+
         if(getIntent().hasExtra("country_name") && getIntent().hasExtra("flag_image")
                 && getIntent().hasExtra("active_cases") && getIntent().hasExtra("total_cases")
                 && getIntent().hasExtra("new_cases") && getIntent().hasExtra("total_deaths")
@@ -62,9 +62,7 @@ public class CountryDetailActivity extends AppCompatActivity {
                 && getIntent().hasExtra("new_cases_array_list")
                 && getIntent().hasExtra("new_deaths_array_list")){
 
-            Log.d(TAG, "getIncomingIntent: found intent extras");
-
-            // incoming data passed into the intent
+            // getting the data which passed into the intent from the previous activity
             countryName = getIntent().getStringExtra("country_name");
             flagImage = getIntent().getStringExtra("flag_image");
             activeCases = getIntent().getStringExtra("active_cases");
@@ -82,6 +80,7 @@ public class CountryDetailActivity extends AppCompatActivity {
 
             StringNumber stringNumber = new StringNumber();
 
+            // numbers are formatted to have commas in between digits
             activeCases = stringNumber.bigNumberFormatting(activeCases);
             totalCases = stringNumber.bigNumberFormatting(totalCases);
             newCases = stringNumber.bigNumberFormatting(newCases);
@@ -95,10 +94,11 @@ public class CountryDetailActivity extends AppCompatActivity {
     }
 
     private void setDataToViews(){
-        Log.d(TAG, "setData: inside method");
+
         // setting the title of the actionBar on top to the countryName which was clicked
         getSupportActionBar().setTitle(countryName);
 
+        // referencing the respective views
         TextView nameCountryView = findViewById(R.id.c_name_country);
         ImageView imageFlag = findViewById(R.id.c_flag_image);
         TextView casesActiveView = findViewById(R.id.c_active_cases_num);
@@ -110,6 +110,7 @@ public class CountryDetailActivity extends AppCompatActivity {
         TextView recoveredNewView = findViewById(R.id.c_new_recovered_num);
         TextView testsTotalView = findViewById(R.id.c_total_tests_num);
 
+        // assigning data to the respective referenced views
         Picasso.with(CountryDetailActivity.this).load(flagImage).into(imageFlag);
         nameCountryView.setText(countryName);
         casesActiveView.setText(activeCases);
@@ -121,7 +122,6 @@ public class CountryDetailActivity extends AppCompatActivity {
         recoveredNewView.setText(newRecovered);
         testsTotalView.setText(totalTests);
 
-        Log.d(TAG, "setData: data assigned to textViews");
     }
 
     // create action bar button
@@ -138,7 +138,7 @@ public class CountryDetailActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.graph_button) {
-            Log.d(TAG, "onOptionsItemSelected: Graph Button Clicked");
+
             Toast.makeText(this, "Graph" , Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(getApplicationContext(), GraphModellingActivity.class);

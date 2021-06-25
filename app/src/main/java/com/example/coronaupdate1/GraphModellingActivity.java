@@ -47,9 +47,13 @@ public class GraphModellingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph_modelling);
 
+        // setting the title in the actionBar
         getSupportActionBar().setTitle("Graphs");
+
+        // enabling the up button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // checking if the appropriate intent extras were received properly or not
         if(getIntent().hasExtra("country_name") && getIntent().hasExtra("active_cases")
                 && getIntent().hasExtra("total_cases") && getIntent().hasExtra("new_cases")
                 && getIntent().hasExtra("total_deaths") && getIntent().hasExtra("new_deaths")
@@ -59,6 +63,7 @@ public class GraphModellingActivity extends AppCompatActivity {
                 && getIntent().hasExtra("new_cases_array_list")
                 && getIntent().hasExtra("new_deaths_array_list")){
 
+            // getting the data which was passed from the previous activity
             countryName = getIntent().getStringExtra("country_name");
             activeCases = getIntent().getStringExtra("active_cases");
             totalCases = getIntent().getStringExtra("total_cases");
@@ -72,14 +77,13 @@ public class GraphModellingActivity extends AppCompatActivity {
             countryNamesArrayList = getIntent().getStringArrayListExtra("country_name_array_list");
             newCasesArrayList = getIntent().getStringArrayListExtra("new_cases_array_list");
             newDeathsArrayList = getIntent().getStringArrayListExtra("new_deaths_array_list");
-            Log.d(TAG, "onCreate: intent recieved " + countryName);
 
             // getting the current date
-            Date date = Calendar.getInstance().getTime();
-            Log.d(TAG, "onCreate: current time -> " + date);
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
             // date is formatted as Ex : 28-Dec-2020
+            Date date = Calendar.getInstance().getTime();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
             String formattedDate = simpleDateFormat.format(date);
+
 
             // Column Chart using anyChart
             AnyChartView anyChartView = findViewById(R.id.any_chart_view);
@@ -90,17 +94,20 @@ public class GraphModellingActivity extends AppCompatActivity {
             List<DataEntry> casesData = new ArrayList<>();
             int countEntries=0;
 
-            // gets data from the 1st 42 entries6
+            // X and Y axis data assigned
+            // gets data from the 1st 42 entries as the graph cannot handle anymore
             for (int i=0; i<countryNamesArrayList.size(); i++){
                 if(Integer.parseInt(newCasesArrayList.get(i)) != 0){
                     countEntries++;
+
                     casesData.add( new ValueDataEntry(countryNamesArrayList.get(i),
                             Integer.parseInt(newCasesArrayList.get(i))) );
-                    Log.d(TAG, "onCreate: countryName " + countryNamesArrayList.get(i) + " Cases " + newCasesArrayList.get(i));
+
+                    Log.d(TAG, "onCreate: countryName " + countryNamesArrayList.get(i)
+                            + " Cases " + newCasesArrayList.get(i) + " entryNum: " + countEntries);
                 }
                 if(countEntries == 42) break;
             }
-            Log.d(TAG, "onCreate: X and Y axis data assigned");
 
             Column column = cartesian.column(casesData);
 
@@ -126,7 +133,7 @@ public class GraphModellingActivity extends AppCompatActivity {
             cartesian.yAxis(0).title("Cases");
 
             anyChartView.setChart(cartesian);
-            Log.d(TAG, "onCreate: anyChartView set !");
+
         }
 
     }

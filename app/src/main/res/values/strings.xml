@@ -17,4 +17,11 @@
     <string name="new_recovered_title">New Recovered</string>
     <string name="total_tests_title">Total Tests</string>
 
+    <string name="about_app_developers">
+        This app was developed by Umaar Abdullah Morshed and Obaydur Salman.\nWe
+        are both at our Sophomore year at the University of Dhaka.This app was developed as a project for our application development lab
+        in the 4th semester of our Bachelors Degree in Science.\nWe
+        enjoyed making this app.
+    </string>
+
 </resources>

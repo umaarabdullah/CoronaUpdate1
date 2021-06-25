@@ -35,13 +35,15 @@ public class GlobalFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull @org.jetbrains.annotations.NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
 
+        // inflating the fragment with fragment_global layout
         View view = inflater.inflate(R.layout.fragment_global, null);
 
         // to make the options (graph button) appear in your Toolbar
         setHasOptionsMenu(true);
 
         StringNumber stringNumber = new StringNumber();
-        
+
+        // referencing the views
         TextView globalActiveCasesView = view.findViewById(R.id.global_active_cases);
         globalActiveCasesView.setText(stringNumber.bigNumberFormatting(Integer.toString(globalData.getActiveCases())));
 

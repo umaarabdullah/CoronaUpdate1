@@ -23,9 +23,6 @@ public class AboutFragment extends Fragment {
         // Inflate the view for this layout
         View view = inflater.inflate(R.layout.fragment_about, null);
 
-        textView = view.findViewById(R.id.about_text_view);
-        textView.setText("Changed About");
-
         return view;
     }
 }

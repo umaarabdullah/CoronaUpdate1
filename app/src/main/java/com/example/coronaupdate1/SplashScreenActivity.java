@@ -10,7 +10,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     private static final String TAG = "SplashScreenActivity";
 
-    int _splashTime = 3000;
+    int _splashTime = 4000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,14 +31,12 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                 } finally {
                     finish();
-                    Log.d(TAG, "run: finished splash screen displaying finally statement");
+                    // launching the MainActivity after the splash screen has launched
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 }
             }
         };
-        Log.d(TAG, "onCreate: before staring splashScreenThread");
         splashScreenThread.start();
 
-        Log.d(TAG, "onCreate: SplashScreenActivity thread started");
     }
 }

@@ -41,7 +41,6 @@ public class CountryFragment extends Fragment {
     public CountryFragment(Context context, List<CountryData> countryDataList){
         this.context = context;
         this.countryDataList = countryDataList;
-        Log.d("countryfragmentActivity", "inside countryFragment constructor ");
     }
 
     @Nullable
@@ -49,8 +48,10 @@ public class CountryFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull @org.jetbrains.annotations.NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
 
+        // inflating (filling) the fragment with fragment country layout
         View view = inflater.inflate(R.layout.fragment_country, null);
 
+        // so that the actionBar widgets are displayed
         setHasOptionsMenu(true);
 
         // get the ArrayList<String> of countryName, newCases, NewDeaths
@@ -71,10 +72,15 @@ public class CountryFragment extends Fragment {
         return view;
     }
 
+    // creating the action bar search box
     @Override
     public void onCreateOptionsMenu(@NonNull @NotNull Menu menu, @NonNull @NotNull MenuInflater inflater) {
+
+        // inflating with the menu that is fragment country menu
         inflater.inflate(R.menu.fragment_country_menu, menu);
 
+        // referencing the actionBar search view and setting up the on query listener
+        // this method will trigger when the user enters a query in the search box
         SearchView searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -97,6 +103,8 @@ public class CountryFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    // what to do with query
+    // we open the countryDetailActivity of the queried country (countryName)
     private void queryProcessing(String query){
         
         for (int i=0; i<countryDataList.size(); i++){
@@ -105,7 +113,7 @@ public class CountryFragment extends Fragment {
                     countryDataList.get(i).getCountryName().toLowerCase() + " query " + query.toLowerCase());
 
             if(countryDataList.get(i).getCountryName().toLowerCase().equals(query.toLowerCase())){
-                Log.d(TAG, "queryProcessing: true case");
+
                 // intent switching to another activity (CountryDetailActivity)
                 Intent intent = new Intent(getContext(), CountryDetailActivity.class);
 
@@ -124,9 +132,7 @@ public class CountryFragment extends Fragment {
                 intent.putStringArrayListExtra("new_cases_array_list", newCasesArrayList);
                 intent.putStringArrayListExtra("new_deaths_array_list", newDeathsArrayList);
 
-                Log.d(TAG, "queryProcessing: before startActivity");
                 context.startActivity(intent);
-                Log.d(TAG, "queryProcessing: after startActivity");
 
                 break;
             }
