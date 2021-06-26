@@ -94,18 +94,18 @@ public class GraphModellingActivity extends AppCompatActivity {
             int countEntries=0;
 
             // X and Y axis data assigned
-            // gets data from the 1st 42 entries as the graph cannot handle anymore
+            // column chart usually fails to render if cases are below 20 (assumption)
             for (int i=0; i<countryNamesArrayList.size(); i++){
-                if(Integer.parseInt(newCasesArrayList.get(i)) != 0){
-                    countEntries++;
 
-                    casesData.add( new ValueDataEntry(countryNamesArrayList.get(i),
-                            Integer.parseInt(newCasesArrayList.get(i))) );
+                int cases = Integer.parseInt(newCasesArrayList.get(i));
+
+                if(cases > 20){
+
+                    casesData.add( new ValueDataEntry(countryNamesArrayList.get(i), cases)) ;
 
                     Log.d(TAG, "onCreate: countryName " + countryNamesArrayList.get(i)
-                            + " Cases " + newCasesArrayList.get(i) + " entryNum: " + countEntries);
+                            + " Cases " + cases );
                 }
-                if(countEntries == 42) break;
             }
 
             Column column = cartesian.column(casesData);

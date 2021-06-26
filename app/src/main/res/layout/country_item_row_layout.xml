@@ -19,7 +19,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textSize="18sp"
-            android:text="TextView" />
+            android:text="TextView"
+            android:paddingStart="10dp"/>
 
         <ImageView
             android:id="@+id/country_flag_image"
@@ -42,7 +43,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/yellow"
                 android:text="TextView"
-                android:textAlignment="viewEnd"/>
+                android:textAlignment="viewEnd"
+                android:paddingEnd="10dp"/>
 
             <TextView
                 android:id="@+id/daily_new_deaths"
@@ -50,7 +52,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/red"
                 android:text="TextView"
-                android:textAlignment="viewEnd"/>
+                android:textAlignment="viewEnd"
+                android:paddingEnd="10dp"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
