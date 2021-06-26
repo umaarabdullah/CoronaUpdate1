@@ -93,6 +93,8 @@ public class MainActivity extends AppCompatActivity
             public void onResponse(Call<List<CountryData>> call, Response<List<CountryData>> response) {
                 countryDataList = response.body();
 
+                Toast.makeText(getApplicationContext(), "Country List Ready", Toast.LENGTH_SHORT).show();
+
                 Log.d("CountryDataList", "CountryName at index 1 = "
                         + countryDataList.get(1).getCountryName());
             }
