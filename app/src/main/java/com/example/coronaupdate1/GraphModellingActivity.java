@@ -26,12 +26,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class GraphModellingActivity extends AppCompatActivity {
 
@@ -109,8 +105,8 @@ public class GraphModellingActivity extends AppCompatActivity {
     private void setNewCasesColumnChart(){
 
         // Column Chart using anyChart
-        AnyChartView anyChartView = findViewById(R.id.any_chart_view_global);
-        anyChartView.setProgressBar(findViewById(R.id.progress_bar_global));
+        AnyChartView anyChartView = findViewById(R.id.any_chart_view_country);
+        anyChartView.setProgressBar(findViewById(R.id.progress_bar_country));
 
         Cartesian cartesian = AnyChart.column();
 

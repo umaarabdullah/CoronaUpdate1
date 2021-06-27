@@ -8,13 +8,13 @@
 
     <com.anychart.AnyChartView
         android:layout_weight="1"
-        android:id="@+id/any_chart_view_global"
+        android:id="@+id/any_chart_view_country"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <ProgressBar
         android:layout_weight="1"
-        android:id="@+id/progress_bar_global"
+        android:id="@+id/progress_bar_country"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

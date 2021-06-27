@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.anychart.APIlib;
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
@@ -85,9 +86,7 @@ public class GraphGlobalCases extends AppCompatActivity {
             formattedDate = simpleDateFormat.format(date);
 
         }
-        // set the pie chart
-        setPieChart(formattedDate, totalCasesFormatted);
-        Log.d(TAG, "onDataChange: set pie chart called");
+
 
         // retrieve data from firebase
         mRootRef.addValueEventListener(new ValueEventListener() {
@@ -99,11 +98,12 @@ public class GraphGlobalCases extends AppCompatActivity {
 
                     dbGlobalDataList.add(dbGlobalData);
                 }
-                Log.d(TAG, "onDataChange: data retrieved succesfully");
 
-                // drawing the column chart after data had been retrieved
-                //setNewCasesColumnChart();
-                Log.d(TAG, "onDataChange: column chart created");
+                // drawing the the charts
+                setPieChart();
+                setNewCasesColumnChart();
+
+                Log.d(TAG, "onDataChange: the charts hab been created");
             }
 
             @Override
@@ -114,11 +114,12 @@ public class GraphGlobalCases extends AppCompatActivity {
         });
     }
 
-    private void setPieChart(String formattedDate, String totalCasesFormatted){
+    private void setPieChart(){
 
         // pie chart using anyChart library
-        AnyChartView anyChartView = findViewById(R.id.any_chart_view_new_cases_global);
-        anyChartView.setProgressBar(findViewById(R.id.progress_bar_new_cases_global));
+        AnyChartView anyChartView = findViewById(R.id.any_chart_view_global);
+        APIlib.getInstance().setActiveAnyChartView(anyChartView);
+        anyChartView.setProgressBar(findViewById(R.id.progress_bar_global));
 
         Pie pie = AnyChart.pie();
 
@@ -127,12 +128,12 @@ public class GraphGlobalCases extends AppCompatActivity {
             @Override
             public void onClick(Event event) {
                 Toast.makeText(GraphGlobalCases.this, event.getData().get("x") + ":" +
-                        event.getData().get("value"), Toast.LENGTH_LONG).show();
+                        event.getData().get("value"), Toast.LENGTH_SHORT).show();
             }
         });
 
         List<DataEntry> globalCasesData = new ArrayList<>();
-        globalCasesData.add(new ValueDataEntry("Active Case", activeCases));
+        globalCasesData.add(new ValueDataEntry("Active", activeCases));
         globalCasesData.add(new ValueDataEntry("Death", totalDeaths));
         globalCasesData.add(new ValueDataEntry("Recovered", totalRecovered));
 
@@ -164,8 +165,9 @@ public class GraphGlobalCases extends AppCompatActivity {
     private void setNewCasesColumnChart(){
 
         // Column Chart using anyChart
-        AnyChartView anyChartView1 = findViewById(R.id.any_chart_view_new_cases_global);
-        anyChartView1.setProgressBar(findViewById(R.id.progress_bar_new_cases_global));
+        AnyChartView anyChartView1 = findViewById(R.id.any_chart_view_global1);
+        APIlib.getInstance().setActiveAnyChartView(anyChartView1);
+        anyChartView1.setProgressBar(findViewById(R.id.progress_bar_global1));
 
         Cartesian cartesian = AnyChart.column();
 
@@ -210,9 +212,10 @@ public class GraphGlobalCases extends AppCompatActivity {
         cartesian.yAxis(0).title("Cases");
 
         anyChartView1.setChart(cartesian);
+        Log.d(TAG, "setNewCasesColumnChart: setBarChart");
     }
 
-    // setting the up button to do the same as the back button
+    // handles menu items
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
