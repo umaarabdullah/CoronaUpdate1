@@ -117,8 +117,9 @@ public class GraphGlobalCases extends AppCompatActivity {
     private void setPieChart(){
 
         // pie chart using anyChart library
+
         AnyChartView anyChartView = findViewById(R.id.any_chart_view_global);
-        APIlib.getInstance().setActiveAnyChartView(anyChartView);
+        APIlib.getInstance().setActiveAnyChartView(anyChartView);   // very important line for multiple charts
         anyChartView.setProgressBar(findViewById(R.id.progress_bar_global));
 
         Pie pie = AnyChart.pie();
@@ -132,6 +133,7 @@ public class GraphGlobalCases extends AppCompatActivity {
             }
         });
 
+        // adding data
         List<DataEntry> globalCasesData = new ArrayList<>();
         globalCasesData.add(new ValueDataEntry("Active", activeCases));
         globalCasesData.add(new ValueDataEntry("Death", totalDeaths));
@@ -139,17 +141,29 @@ public class GraphGlobalCases extends AppCompatActivity {
 
         pie.data(globalCasesData);
 
+        // prettifying the pie chart title
         pie.title("Distribution of Total Cases : " + totalCasesFormatted +  " Date-" + formattedDate);
         pie.title().fontColor("#000000");
         pie.title().fontOpacity(10);
         pie.title().fontStyle("bold");
 
+        // prettifying the labels outside the pie chart the numbers in %
         pie.labels().position("outside");
+        pie.labels().fontColor("#000000");
+        pie.labels().fontOpacity(10);
+        pie.labels().fontStyle("bold");
 
+        // prettifying the Active, Death, Recovered legend text
+        pie.legend().fontColor("#000000");
+        pie.legend().fontOpacity(10);
+        pie.legend().fontStyle("bold");
+
+        // prettifying the legend title text Possible Outcomes
         pie.legend().title().enabled(true);
         pie.legend().title()
                 .text("Possible Outcomes")
                 .padding(0d, 0d, 10d, 0d);
+        pie.legend().title().fontOpacity(10);
         pie.legend().title().fontStyle("bold");
         pie.legend().title().fontColor("#000000");
 
@@ -174,14 +188,12 @@ public class GraphGlobalCases extends AppCompatActivity {
         List<DataEntry> casesData = new ArrayList<>();
 
         // X and Y axis data assigned
-        // column chart usually fails to render if cases are below 20 (assumption)
+        // (Experimental thought) sometime column chart fails to render if cases are below 20 (assumption) or near 0 or 0
         for (int i=0; i<dbGlobalDataList.size(); i++){
 
             int cases = Integer.parseInt(dbGlobalDataList.get(i).getNewCases());
 
-            if(cases > 20){
-                casesData.add(new ValueDataEntry(dbGlobalDataList.get(i).getDate(), cases));
-            }
+            casesData.add(new ValueDataEntry(dbGlobalDataList.get(i).getDate(), cases));
         }
 
         Column column = cartesian.column(casesData);
@@ -195,24 +207,43 @@ public class GraphGlobalCases extends AppCompatActivity {
                 .offsetY(5d)
                 .format("{%Value}{groupsSeparator: }");
 
+        // prettifying the chart title
         cartesian.animation(true);
         cartesian.title("Daily New Cases - " + "Global");
+        cartesian.title().fontOpacity(10);
+        cartesian.title().fontColor("#000000");
         cartesian.title().fontStyle("bold");
 
         cartesian.yScale().minimum(0d);
 
-        cartesian.xAxis(0).labels().fontSize(10);
+        // prettifying the xAxis labels, individual values of x
+        cartesian.xAxis(0).labels().fontOpacity(10);
+        cartesian.xAxis(0).labels().fontColor("#000000");
         cartesian.xAxis(0).labels().fontStyle("bold");
+
+        // prettifying the yAxis labels, individual values of y
         cartesian.yAxis(0).labels().format("{%Value}{groupsSeparator: }");
+        cartesian.yAxis(0).labels().fontOpacity(10);
+        cartesian.yAxis(0).labels().fontColor("#000000");
+        cartesian.yAxis(0).labels().fontStyle("bold");
 
         cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
         cartesian.interactivity().hoverMode(HoverMode.BY_X);
 
+        // prettifying the xAxis title
         cartesian.xAxis(0).title("Dates");
+        cartesian.xAxis(0).title().fontOpacity(10);
+        cartesian.xAxis(0).title().fontColor("#000000");
+        cartesian.xAxis(0).title().fontStyle("bold");
+
+        // prettifying the yAxis title
         cartesian.yAxis(0).title("Cases");
+        cartesian.yAxis(0).title().fontOpacity(10); // prettifying
+        cartesian.yAxis(0).title().fontColor("#000000");
+        cartesian.yAxis(0).title().fontStyle("bold");
 
         anyChartView1.setChart(cartesian);
-        Log.d(TAG, "setNewCasesColumnChart: setBarChart");
+
     }
 
     // handles menu items

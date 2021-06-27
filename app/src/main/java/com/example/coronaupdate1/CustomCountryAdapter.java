@@ -63,7 +63,6 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
         // setting the data to the views
         holder.countryName.setText(countryDataList.get(position).getCountryName());
         Picasso.with(context).load(countryDataList.get(position).getCountryInfo().getFlag()).into(holder.countryFlagImage);
-        Log.d(TAG, "onBindViewHolder: Flag url : " + countryDataList.get(position).getCountryInfo().getFlag());
 
         // newCases and newDeaths for each country row item
         String newCasesListScreen = Integer.toString(countryDataList.get(position).getNewCases());

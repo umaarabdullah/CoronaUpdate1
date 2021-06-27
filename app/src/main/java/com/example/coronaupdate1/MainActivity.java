@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity
         // getting time
         DateFormat time = new SimpleDateFormat("HH:mm");
         localTime = time.format(date);
-        Log.d(TAG, "onCreate: today calendar local time : " + localTime);
+        Log.d(TAG, "onCreate: today calendar local time : " + localTime + " newDayStartingTime : " + newDayStartingTime );
 
 
         // called global data method before default screen but waiting for response
@@ -100,6 +100,8 @@ public class MainActivity extends AppCompatActivity
         call.enqueue(new Callback<GlobalData>() {
             @Override
             public void onResponse(Call<GlobalData> call, Response<GlobalData> response) {
+
+                // records the data received from http call response as plain old java objects (POJO)
                 globalData = response.body();
 
                 //default Fragment will be loaded when there is a response on the call of globalData
@@ -118,11 +120,13 @@ public class MainActivity extends AppCompatActivity
                 if(localTime.compareTo(newDayStartingTime) < 0){
                     DbGlobalData dbGlobalData = new DbGlobalData(Integer.toString(globalData.getNewCases()), yesterdayDate);
 
+                    Log.d(TAG, "getGlobalData onResponse: is today's data actually today's data ? false");
                     setFireBaseDbGlobalData(dbGlobalData, false);
                 }
                 else{
                     DbGlobalData dbGlobalData = new DbGlobalData(Integer.toString(globalData.getNewCases()), formattedDate);
 
+                    Log.d(TAG, "getGlobalData onResponse: is today's data actually today's data ? true");
                     setFireBaseDbGlobalData(dbGlobalData, true);
                 }
 
@@ -141,12 +145,14 @@ public class MainActivity extends AppCompatActivity
         call.enqueue(new Callback<List<CountryData>>() {
             @Override
             public void onResponse(Call<List<CountryData>> call, Response<List<CountryData>> response) {
+
+                // records the data received from http call response as plain old java objects (POJO)
                 countryDataList = response.body();
 
                 Toast.makeText(getApplicationContext(), "Country List Ready", Toast.LENGTH_SHORT).show();
 
-                Log.d("CountryDataList", "CountryName at index 1 = "
-                        + countryDataList.get(1).getCountryName());
+                Log.d("CountryDataList", "CountryName at index 1 = " + countryDataList.get(1).getCountryName());
+                Log.d(TAG, "onResponse: CountryDataList size : " + countryDataList.size());
 
                 // parsing data which are to be written on the firebase realtime database
                 // need to check if indeed it today date's data as the timezone is +6, we do this by comparing time that is the current less than 5:50 Am.
@@ -204,9 +210,11 @@ public class MainActivity extends AppCompatActivity
         call.enqueue(new Callback<CountryData>() {
             @Override
             public void onResponse(Call<CountryData> call, Response<CountryData> response) {
+
+                // records the data received from http call response as plain old java objects (POJO)
                 countryData = response.body();
 
-                Log.d("CountryDataBD ", "NewCases = " + countryData.getNewCases());
+                Log.d("CountryDataQuery ", "NewCases = " + countryData.getNewCases());
             }
 
             @Override
