@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -41,6 +42,9 @@ public class MainActivity extends AppCompatActivity
     private GlobalData globalData;
     private CountryData countryData;
     private String formattedDate;
+    private String yesterdayDate;
+    private String localTime;
+    private final String newDayStartingTime = "05:50";
 
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
 
@@ -51,19 +55,33 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Log.d(TAG, "onCreate: ");
 
+
         // getting the current date
-        // date is formatted as Ex : 28-Dec-2020
         Date date = Calendar.getInstance().getTime();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
         formattedDate = simpleDateFormat.format(date);
+        Log.d(TAG, "onCreate: today calendar date : " + formattedDate );
+
+        // getting date of yesterday
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, -1);
+        yesterdayDate = simpleDateFormat.format(calendar.getTime());
+        Log.d(TAG, "onCreate: yesterday calendar date : " +   yesterdayDate);
+
+        // getting time
+        DateFormat time = new SimpleDateFormat("HH:mm");
+        localTime = time.format(date);
+        Log.d(TAG, "onCreate: today calendar local time : " + localTime);
+
 
         // called global data method before default screen but waiting for response
         getGlobalData();
         Log.d(TAG, "");
 
-        // global data will be null as it hasn't been instanciated yet it is waiting for a response of the http call
+        // global data will be null as it hasn't been instantiated yet it is waiting for a response of the http call
         if(globalData == null)
-            Log.d(TAG, "onCreate: globalData is null, has not been instanciated");
+            Log.d(TAG, "onCreate: globalData is null, has not been instantiated");
 
         // bottomNavListener connected
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation_bar);
@@ -95,8 +113,19 @@ public class MainActivity extends AppCompatActivity
                 Log.d("GlobalData","New Recovered: " + globalData.getNewRecovered());
 
                 // parsing data that is to be written on fireBase realtime database
-                 DbGlobalData dbGlobalData = new DbGlobalData(Integer.toString(globalData.getNewCases()), formattedDate);
-                 setFireBaseDbGlobalData(dbGlobalData);
+                // need to check if indeed it today date's data as the timezone is +6, we do this by comparing time that is the current less than 5:50 Am.
+                // negative means localTime is smaller it means actual date is yesterday, 0 means equal, positive means localtime is greater and actual date is today
+                if(localTime.compareTo(newDayStartingTime) < 0){
+                    DbGlobalData dbGlobalData = new DbGlobalData(Integer.toString(globalData.getNewCases()), yesterdayDate);
+
+                    setFireBaseDbGlobalData(dbGlobalData, false);
+                }
+                else{
+                    DbGlobalData dbGlobalData = new DbGlobalData(Integer.toString(globalData.getNewCases()), formattedDate);
+
+                    setFireBaseDbGlobalData(dbGlobalData, true);
+                }
+
 
             }
 
@@ -120,21 +149,46 @@ public class MainActivity extends AppCompatActivity
                         + countryDataList.get(1).getCountryName());
 
                 // parsing data which are to be written on the firebase realtime database
-                for (int i=0; i<countryDataList.size(); i++){
+                // need to check if indeed it today date's data as the timezone is +6, we do this by comparing time that is the current less than 5:50 Am.
+                // negative means localTime is smaller it means actual date is yesterday, 0 means equal, positive means localtime is greater and actual date is today
+                Log.d(TAG, "onResponse: localTime Compare to NewStartdayTime : " + localTime.compareTo(newDayStartingTime));
+                if(localTime.compareTo(newDayStartingTime) < 0) {
+                    for (int i = 0; i < countryDataList.size(); i++) {
 
-                    DbCountryData dbCountryData =
-                            new DbCountryData(countryDataList.get(i).getCountryName(),
-                                    Integer.toString(countryDataList.get(i).getActiveCases()),
-                                    Integer.toString(countryDataList.get(i).getTotalCases()),
-                                    Integer.toString(countryDataList.get(i).getNewCases()),
-                                    Integer.toString(countryDataList.get(i).getTotalDeaths()),
-                                    Integer.toString(countryDataList.get(i).getNewDeaths()),
-                                    Integer.toString(countryDataList.get(i).getTotalRecovered()),
-                                    Integer.toString(countryDataList.get(i).getNewRecovered()),
-                                    Integer.toString(countryDataList.get(i).getTotalTests()),
-                                    formattedDate);
+                        // calling DbCountryData constructor
+                        DbCountryData dbCountryData =
+                                new DbCountryData(countryDataList.get(i).getCountryName(),
+                                        Integer.toString(countryDataList.get(i).getActiveCases()),
+                                        Integer.toString(countryDataList.get(i).getTotalCases()),
+                                        Integer.toString(countryDataList.get(i).getNewCases()),
+                                        Integer.toString(countryDataList.get(i).getTotalDeaths()),
+                                        Integer.toString(countryDataList.get(i).getNewDeaths()),
+                                        Integer.toString(countryDataList.get(i).getTotalRecovered()),
+                                        Integer.toString(countryDataList.get(i).getNewRecovered()),
+                                        Integer.toString(countryDataList.get(i).getTotalTests()),
+                                        yesterdayDate);
 
-                    setFireBaseDbCountryData(dbCountryData);
+                        setFireBaseDbCountryData(dbCountryData, false);
+                    }
+                }
+                else {
+                    for (int i = 0; i < countryDataList.size(); i++) {
+
+                        // calling DbCountryData constructor
+                        DbCountryData dbCountryData =
+                                new DbCountryData(countryDataList.get(i).getCountryName(),
+                                        Integer.toString(countryDataList.get(i).getActiveCases()),
+                                        Integer.toString(countryDataList.get(i).getTotalCases()),
+                                        Integer.toString(countryDataList.get(i).getNewCases()),
+                                        Integer.toString(countryDataList.get(i).getTotalDeaths()),
+                                        Integer.toString(countryDataList.get(i).getNewDeaths()),
+                                        Integer.toString(countryDataList.get(i).getTotalRecovered()),
+                                        Integer.toString(countryDataList.get(i).getNewRecovered()),
+                                        Integer.toString(countryDataList.get(i).getTotalTests()),
+                                        formattedDate);
+
+                        setFireBaseDbCountryData(dbCountryData, true);
+                    }
                 }
             }
 
@@ -214,23 +268,46 @@ public class MainActivity extends AppCompatActivity
     }
 
     // writing global data on firebase realtime database
-    public void setFireBaseDbGlobalData(DbGlobalData dbGlobalData){
-        mRootRef.child("GlobalData").child(formattedDate).setValue(dbGlobalData);
+    public void setFireBaseDbGlobalData(DbGlobalData dbGlobalData, boolean flag){
+
+        // flag identifies if it is a new date of not. True means new date data and false means yesterday date data
+        if(flag){
+            mRootRef.child("GlobalData").child(formattedDate).setValue(dbGlobalData);
+        }
+        else {
+            mRootRef.child("GlobalData").child(yesterdayDate).setValue(dbGlobalData);
+        }
     }
 
     // writing country data on firebase realtime database
-    public void setFireBaseDbCountryData(DbCountryData dbCountryData){
+    public void setFireBaseDbCountryData(DbCountryData dbCountryData, boolean flag){
+        // flag identifies if it is a new date of not. True means new date data and false means yesterday date data
+        if(flag){
+            // as there cannot be '.' in the firebase path
+            if(dbCountryData.getCountryName().equals("S. Korea")){
+                dbCountryData.setCountryName("South Korea");
+                Log.d(TAG, "setFireBaseDbCountryData: south korea");
+            }
+            else if(dbCountryData.getCountryName().equals("St. Barth")){
+                dbCountryData.setCountryName("Saint Barth");
+                Log.d(TAG, "setFireBaseDbCountryData: saint barth");
+            }
 
-        // as there cannot be '.' in the firebase path
-        if(dbCountryData.getCountryName().equals("S. Korea")){
-            dbCountryData.setCountryName("South Korea");
-            Log.d(TAG, "setFireBaseDbCountryData: south korea");
+            mRootRef.child("CountryData").child(dbCountryData.getCountryName()).child(formattedDate).setValue(dbCountryData);
         }
-        else if(dbCountryData.getCountryName().equals("St. Barth")){
-            dbCountryData.setCountryName("Saint Barth");
-            Log.d(TAG, "setFireBaseDbCountryData: saint barth");
+        else {
+            // as there cannot be '.' in the firebase path
+            if(dbCountryData.getCountryName().equals("S. Korea")){
+                dbCountryData.setCountryName("South Korea");
+                Log.d(TAG, "setFireBaseDbCountryData: south korea");
+            }
+            else if(dbCountryData.getCountryName().equals("St. Barth")){
+                dbCountryData.setCountryName("Saint Barth");
+                Log.d(TAG, "setFireBaseDbCountryData: saint barth");
+            }
+
+            mRootRef.child("CountryData").child(dbCountryData.getCountryName()).child(yesterdayDate).setValue(dbCountryData);
         }
 
-        mRootRef.child("CountryData").child(dbCountryData.getCountryName()).child(formattedDate).setValue(dbCountryData);
     }
 }
