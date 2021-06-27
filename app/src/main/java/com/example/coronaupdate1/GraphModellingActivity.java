@@ -111,7 +111,7 @@ public class GraphModellingActivity extends AppCompatActivity {
             Column column = cartesian.column(casesData);
 
             column.tooltip()
-                    .titleFormat("{X}")
+                    .titleFormat("{%X}")
                     .position(Position.CENTER_BOTTOM)
                     .anchor(Anchor.CENTER_BOTTOM)
                     .offsetX(0d)
@@ -119,16 +119,18 @@ public class GraphModellingActivity extends AppCompatActivity {
                     .format("{%Value}{groupsSeparator: }");
 
             cartesian.animation(true);
-            cartesian.title("New Cases (Date: " + formattedDate + ")");
+            cartesian.title("Daily New Cases By Country (Date: " + formattedDate + ")");
 
             cartesian.yScale().minimum(0d);
 
+            cartesian.xAxis(0).labels().fontSize(5);
+            cartesian.xAxis(0).labels().fontStyle("bold");
             cartesian.yAxis(0).labels().format("{%Value}{groupsSeparator: }");
 
             cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
             cartesian.interactivity().hoverMode(HoverMode.BY_X);
 
-            cartesian.xAxis(0).title("CountryName");
+            cartesian.xAxis(0).title("Country");
             cartesian.yAxis(0).title("Cases");
 
             anyChartView.setChart(cartesian);
