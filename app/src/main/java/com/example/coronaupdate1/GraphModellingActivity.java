@@ -17,6 +17,14 @@ import com.anychart.enums.Anchor;
 import com.anychart.enums.HoverMode;
 import com.anychart.enums.Position;
 import com.anychart.enums.TooltipPositionMode;
+import com.example.coronaupdate1.DataModel.DbCountryData;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,22 +37,15 @@ public class GraphModellingActivity extends AppCompatActivity {
 
     private static final String TAG = "GraphModellingActivity";
     private String countryName;
-    private String activeCases;
-    private String totalCases;
-    private String newCases;
-    private String totalDeaths;
-    private String newDeaths;
-    private String totalRecovered;
-    private String newRecovered;
-    private String totalTests;
-    private ArrayList<String> countryNamesArrayList = new ArrayList<String>();
-    private ArrayList<String> newCasesArrayList = new ArrayList<String>();
-    private ArrayList<String> newDeathsArrayList = new ArrayList<String>();
+
+    private DatabaseReference mRootRef;
+    private final List<DbCountryData> selectedCountryData = new ArrayList<DbCountryData>();        // selected country data by dates
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph_modelling);
+        Log.d(TAG, "onCreate: ");
 
         // setting the title in the actionBar
         getSupportActionBar().setTitle("Graphs");
@@ -53,90 +54,114 @@ public class GraphModellingActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // checking if the appropriate intent extras were received properly or not
-        if(getIntent().hasExtra("country_name") && getIntent().hasExtra("active_cases")
-                && getIntent().hasExtra("total_cases") && getIntent().hasExtra("new_cases")
-                && getIntent().hasExtra("total_deaths") && getIntent().hasExtra("new_deaths")
-                && getIntent().hasExtra("total_recovered") && getIntent().hasExtra("new_recovered")
-                && getIntent().hasExtra("total_tests")
-                && getIntent().hasExtra("country_name_array_list")
-                && getIntent().hasExtra("new_cases_array_list")
-                && getIntent().hasExtra("new_deaths_array_list")){
+        if(getIntent().hasExtra("country_name")){
 
             // getting the data which was passed from the previous activity
             countryName = getIntent().getStringExtra("country_name");
-            activeCases = getIntent().getStringExtra("active_cases");
-            totalCases = getIntent().getStringExtra("total_cases");
-            newCases = getIntent().getStringExtra("new_cases");
-            totalDeaths = getIntent().getStringExtra("total_deaths");
-            newDeaths = getIntent().getStringExtra("new_deaths");
-            totalRecovered = getIntent().getStringExtra("total_recovered");
-            newRecovered = getIntent().getStringExtra("new_recovered");
-            totalTests = getIntent().getStringExtra("total_tests");
-
-            countryNamesArrayList = getIntent().getStringArrayListExtra("country_name_array_list");
-            newCasesArrayList = getIntent().getStringArrayListExtra("new_cases_array_list");
-            newDeathsArrayList = getIntent().getStringArrayListExtra("new_deaths_array_list");
-
-            // getting the current date
-            // date is formatted as Ex : 28-Dec-2020
-            Date date = Calendar.getInstance().getTime();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
-            String formattedDate = simpleDateFormat.format(date);
+            Log.d(TAG, "onCreate: got intent");
 
 
-            // Column Chart using anyChart
-            AnyChartView anyChartView = findViewById(R.id.any_chart_view_global);
-            anyChartView.setProgressBar(findViewById(R.id.progress_bar_global));
-
-            Cartesian cartesian = AnyChart.column();
-
-            List<DataEntry> casesData = new ArrayList<>();
-            int countEntries=0;
-
-            // X and Y axis data assigned
-            // column chart usually fails to render if cases are below 20 (assumption)
-            for (int i=0; i<countryNamesArrayList.size(); i++){
-
-                int cases = Integer.parseInt(newCasesArrayList.get(i));
-
-                if(cases > 20){
-
-                    casesData.add( new ValueDataEntry(countryNamesArrayList.get(i), cases)) ;
-
-                    Log.d(TAG, "onCreate: countryName " + countryNamesArrayList.get(i)
-                            + " Cases " + cases );
-                }
+            // referencing the correct branch in the database. I.e the countryName whose detail screen was clicked
+            if(countryName == "S. Korea"){
+                mRootRef = FirebaseDatabase.getInstance().getReference().child("CountryData").child("South Korea");
             }
+            else if (countryName == "St. Barth"){
+                mRootRef = FirebaseDatabase.getInstance().getReference().child("CountryData").child("Saint Barth");
+            }
+            else{
+                mRootRef = FirebaseDatabase.getInstance().getReference().child("CountryData").child(countryName);
+            }
+            Log.d(TAG, "onCreate: referenced countryName branch correctly");
 
-            Column column = cartesian.column(casesData);
 
-            column.tooltip()
-                    .titleFormat("{%X}")
-                    .position(Position.CENTER_BOTTOM)
-                    .anchor(Anchor.CENTER_BOTTOM)
-                    .offsetX(0d)
-                    .offsetY(5d)
-                    .format("{%Value}{groupsSeparator: }");
+            // retrieving data from the dataBase
+            mRootRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                    // iterating through dates and adding the data at each date to the list
+                    for (DataSnapshot dateDataSnapshot : snapshot.getChildren()){
 
-            cartesian.animation(true);
-            cartesian.title("Daily New Cases By Country (Date: " + formattedDate + ")");
+                        DbCountryData dbCountryData = dateDataSnapshot.getValue(DbCountryData.class);
 
-            cartesian.yScale().minimum(0d);
+                        // adding to the list
+                        selectedCountryData.add(dbCountryData);
 
-            cartesian.xAxis(0).labels().fontSize(5);
-            cartesian.xAxis(0).labels().fontStyle("bold");
-            cartesian.yAxis(0).labels().format("{%Value}{groupsSeparator: }");
+                        Log.d(TAG, "onDataChange: countryName " + "dbCountryData.getCountryName()");
+                        Log.d(TAG, "onDataChange: childrenCount " + dateDataSnapshot.getChildrenCount());
+                        Log.d(TAG, "onDataChange: Key " + dateDataSnapshot.getKey());
+                    }
 
-            cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
-            cartesian.interactivity().hoverMode(HoverMode.BY_X);
+                    Log.d(TAG, "onCreate: retrieved data successfully");
 
-            cartesian.xAxis(0).title("Country");
-            cartesian.yAxis(0).title("Cases");
+                    // after data is fetched the column chart is drawn
+                    setNewCasesColumnChart();
+                }
 
-            anyChartView.setChart(cartesian);
+                @Override
+                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                }
+            });
 
         }
+    }
 
+    private void setNewCasesColumnChart(){
+
+        // Column Chart using anyChart
+        AnyChartView anyChartView = findViewById(R.id.any_chart_view_global);
+        anyChartView.setProgressBar(findViewById(R.id.progress_bar_global));
+
+        Cartesian cartesian = AnyChart.column();
+
+        List<DataEntry> casesData = new ArrayList<>();
+
+        // X and Y axis data assigned
+        // column chart usually fails to render if cases are below 20 (assumption)
+        for (int i=0; i<selectedCountryData.size(); i++){
+
+            int cases = Integer.parseInt(selectedCountryData.get(i).getNewCases());
+
+            if(cases > 20){
+                casesData.add(new ValueDataEntry(selectedCountryData.get(i).getDate(), cases));
+            }
+        }
+
+        Column column = cartesian.column(casesData);
+        column.color("#FBC02D");    // setting column bar color
+
+        column.tooltip()
+                .titleFormat("{%X}")
+                .position(Position.CENTER_BOTTOM)
+                .anchor(Anchor.CENTER_BOTTOM)
+                .offsetX(0d)
+                .offsetY(5d)
+                .format("{%Value}{groupsSeparator: }");
+
+        cartesian.animation(true);
+        cartesian.title("Daily New Cases - " + countryName);
+        cartesian.title().fontStyle("bold");
+
+        cartesian.yScale().minimum(0d);
+
+        cartesian.xAxis(0).labels().fontSize(10);
+        cartesian.xAxis(0).labels().fontStyle("bold");
+        cartesian.yAxis(0).labels().format("{%Value}{groupsSeparator: }");
+
+        cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
+        cartesian.interactivity().hoverMode(HoverMode.BY_X);
+
+        cartesian.xAxis(0).title("Dates");
+        cartesian.yAxis(0).title("Cases");
+
+        anyChartView.setChart(cartesian);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: ");
     }
 
     @Override

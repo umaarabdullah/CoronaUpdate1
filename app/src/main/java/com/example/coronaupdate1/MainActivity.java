@@ -4,24 +4,30 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.coronaupdate1.DataModel.CountryData;
-import com.example.coronaupdate1.DataModel.CountryInfo;
+import com.example.coronaupdate1.DataModel.DbCountryData;
+import com.example.coronaupdate1.DataModel.DbGlobalData;
 import com.example.coronaupdate1.DataModel.GlobalData;
 import com.example.coronaupdate1.api.RetrofitClient;
 import com.example.coronaupdate1.fragments.AboutFragment;
 import com.example.coronaupdate1.fragments.CountryFragment;
 import com.example.coronaupdate1.fragments.GlobalFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,12 +40,22 @@ public class MainActivity extends AppCompatActivity
     private List<CountryData> countryDataList;
     private GlobalData globalData;
     private CountryData countryData;
+    private String formattedDate;
+
+    DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d(TAG, "onCreate: ");
+
+        // getting the current date
+        // date is formatted as Ex : 28-Dec-2020
+        Date date = Calendar.getInstance().getTime();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
+        formattedDate = simpleDateFormat.format(date);
 
         // called global data method before default screen but waiting for response
         getGlobalData();
@@ -77,6 +93,11 @@ public class MainActivity extends AppCompatActivity
                 Log.d("GlobalData","Total Recovered: " + globalData.getTotalRecovered());
                 Log.d("GlobalData","New Cases: " + globalData.getNewCases());
                 Log.d("GlobalData","New Recovered: " + globalData.getNewRecovered());
+
+                // parsing data that is to be written on fireBase realtime database
+                 DbGlobalData dbGlobalData = new DbGlobalData(Integer.toString(globalData.getNewCases()), formattedDate);
+                 setFireBaseDbGlobalData(dbGlobalData);
+
             }
 
             @Override
@@ -97,6 +118,24 @@ public class MainActivity extends AppCompatActivity
 
                 Log.d("CountryDataList", "CountryName at index 1 = "
                         + countryDataList.get(1).getCountryName());
+
+                // parsing data which are to be written on the firebase realtime database
+                for (int i=0; i<countryDataList.size(); i++){
+
+                    DbCountryData dbCountryData =
+                            new DbCountryData(countryDataList.get(i).getCountryName(),
+                                    Integer.toString(countryDataList.get(i).getActiveCases()),
+                                    Integer.toString(countryDataList.get(i).getTotalCases()),
+                                    Integer.toString(countryDataList.get(i).getNewCases()),
+                                    Integer.toString(countryDataList.get(i).getTotalDeaths()),
+                                    Integer.toString(countryDataList.get(i).getNewDeaths()),
+                                    Integer.toString(countryDataList.get(i).getTotalRecovered()),
+                                    Integer.toString(countryDataList.get(i).getNewRecovered()),
+                                    Integer.toString(countryDataList.get(i).getTotalTests()),
+                                    formattedDate);
+
+                    setFireBaseDbCountryData(dbCountryData);
+                }
             }
 
             @Override
@@ -137,7 +176,13 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case R.id.navigation_country:
+                // wait until the api call responds and countryDataList is populated
+                if(countryDataList == null) {
+                    Toast.makeText(this, "Loading", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
                 Toast.makeText(this, "Country" , Toast.LENGTH_SHORT).show();
+
                 // passing countryDataList to CountryFragment
                 fragment = new CountryFragment(MainActivity.this, countryDataList);     // using getApplicationContext() caused error when creating the detail screen  but MainActivity.this fixed it
                 break;
@@ -166,5 +211,26 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
         return false;
+    }
+
+    // writing global data on firebase realtime database
+    public void setFireBaseDbGlobalData(DbGlobalData dbGlobalData){
+        mRootRef.child("GlobalData").child(formattedDate).setValue(dbGlobalData);
+    }
+
+    // writing country data on firebase realtime database
+    public void setFireBaseDbCountryData(DbCountryData dbCountryData){
+
+        // as there cannot be '.' in the firebase path
+        if(dbCountryData.getCountryName().equals("S. Korea")){
+            dbCountryData.setCountryName("South Korea");
+            Log.d(TAG, "setFireBaseDbCountryData: south korea");
+        }
+        else if(dbCountryData.getCountryName().equals("St. Barth")){
+            dbCountryData.setCountryName("Saint Barth");
+            Log.d(TAG, "setFireBaseDbCountryData: saint barth");
+        }
+
+        mRootRef.child("CountryData").child(dbCountryData.getCountryName()).child(formattedDate).setValue(dbCountryData);
     }
 }

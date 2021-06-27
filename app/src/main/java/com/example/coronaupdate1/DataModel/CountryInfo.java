@@ -35,4 +35,20 @@ public class CountryInfo {
     public String getFlag() {
         return flag;
     }
+
+    public void setCountryId(int countryId) {
+        this.countryId = countryId;
+    }
+
+    public void setIso2(String iso2) {
+        this.iso2 = iso2;
+    }
+
+    public void setIso3(String iso3) {
+        this.iso3 = iso3;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
 }
