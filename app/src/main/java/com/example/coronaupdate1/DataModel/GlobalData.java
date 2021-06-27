@@ -49,4 +49,28 @@ public class GlobalData {
     public int getNewRecovered() {
         return newRecovered;
     }
+
+    public void setActiveCases(int activeCases) {
+        this.activeCases = activeCases;
+    }
+
+    public void setTotalCases(int totalCases) {
+        this.totalCases = totalCases;
+    }
+
+    public void setTotalDeaths(int totalDeaths) {
+        this.totalDeaths = totalDeaths;
+    }
+
+    public void setTotalRecovered(int totalRecovered) {
+        this.totalRecovered = totalRecovered;
+    }
+
+    public void setNewCases(int newCases) {
+        this.newCases = newCases;
+    }
+
+    public void setNewRecovered(int newRecovered) {
+        this.newRecovered = newRecovered;
+    }
 }

@@ -80,4 +80,44 @@ public class CountryData {
     public CountryInfo getCountryInfo() {
         return countryInfo;
     }
+
+    public void setCountryName(String countryName) {
+        this.countryName = countryName;
+    }
+
+    public void setActiveCases(int activeCases) {
+        this.activeCases = activeCases;
+    }
+
+    public void setTotalCases(int totalCases) {
+        this.totalCases = totalCases;
+    }
+
+    public void setNewCases(int newCases) {
+        this.newCases = newCases;
+    }
+
+    public void setTotalDeaths(int totalDeaths) {
+        this.totalDeaths = totalDeaths;
+    }
+
+    public void setNewDeaths(int newDeaths) {
+        this.newDeaths = newDeaths;
+    }
+
+    public void setTotalRecovered(int totalRecovered) {
+        this.totalRecovered = totalRecovered;
+    }
+
+    public void setNewRecovered(int newRecovered) {
+        this.newRecovered = newRecovered;
+    }
+
+    public void setTotalTests(int totalTests) {
+        this.totalTests = totalTests;
+    }
+
+    public void setCountryInfo(CountryInfo countryInfo) {
+        this.countryInfo = countryInfo;
+    }
 }

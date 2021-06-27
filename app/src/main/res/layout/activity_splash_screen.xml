@@ -11,9 +11,10 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="10dp"
         android:layout_marginBottom="27dp"
         android:text="Sponsored By DogeCoin"
+        android:textSize="12sp"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -22,11 +23,9 @@
         android:id="@+id/imageView3"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="212dp"
-        android:layout_marginBottom="26dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView4"
         app:srcCompat="@drawable/weak_doge_coin" />
 

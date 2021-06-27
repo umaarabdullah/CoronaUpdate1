@@ -62,7 +62,7 @@ public class CountryDetailActivity extends AppCompatActivity {
                 && getIntent().hasExtra("new_cases_array_list")
                 && getIntent().hasExtra("new_deaths_array_list")){
 
-            // getting the data which passed into the intent from the previous activity
+            // getting the data which was passed into the intent from the previous activity
             countryName = getIntent().getStringExtra("country_name");
             flagImage = getIntent().getStringExtra("flag_image");
             activeCases = getIntent().getStringExtra("active_cases");
@@ -145,18 +145,6 @@ public class CountryDetailActivity extends AppCompatActivity {
 
             // putting data in intent to pass to next activity
             intent.putExtra("country_name", countryName);
-            intent.putExtra("active_cases", activeCases);
-            intent.putExtra("total_cases", totalCases);
-            intent.putExtra("new_cases", newCases);
-            intent.putExtra("total_deaths", totalDeaths);
-            intent.putExtra("new_deaths", newDeaths);
-            intent.putExtra("total_recovered", totalRecovered);
-            intent.putExtra("new_recovered", newRecovered);
-            intent.putExtra("total_tests", totalTests);
-
-            intent.putStringArrayListExtra("country_name_array_list", countryNamesArrayList);
-            intent.putStringArrayListExtra("new_cases_array_list", newCasesArrayList);
-            intent.putStringArrayListExtra("new_deaths_array_list", newDeathsArrayList);
 
             startActivity(intent);
 
