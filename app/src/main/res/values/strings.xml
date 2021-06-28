@@ -18,10 +18,12 @@
     <string name="total_tests_title">Total Tests</string>
 
     <string name="about_app_developers">
+        The Global Page Response will Update at 7:20Am and Country Page response will update at 7:00Am (Approximately).\n\n
         This app was developed by Umaar Abdullah Morshed and Obaydur Salman.\nWe
         are both at our Sophomore year at the University of Dhaka.This app was developed as a project for our application development lab
         in the 4th semester of our Bachelors Degree in Science.\nWe
         enjoyed making this app.
     </string>
+    <string name="refresh">Refresh</string>
 
 </resources>

@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity
     private String formattedDate;
     private String yesterdayDate;
     private String localTime;
-    private final String newDayStartingTime = "05:50";
+    private final String newDayStartingTime = "07:00";      // country api response update at around 7AM
 
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
 
@@ -316,6 +316,15 @@ public class MainActivity extends AppCompatActivity
 
             mRootRef.child("CountryData").child(dbCountryData.getCountryName()).child(yesterdayDate).setValue(dbCountryData);
         }
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if(item.getItemId() == R.id.menu_refresh_global){
+            finish();
+            startActivity(getIntent());
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
