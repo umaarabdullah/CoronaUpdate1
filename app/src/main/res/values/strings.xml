@@ -18,11 +18,11 @@
     <string name="total_tests_title">Total Tests</string>
 
     <string name="about_app_developers">
-        The Global Page Response will Update at 7:20Am and Country Page response will update at 7:00Am (Approximately).\n\n
-        This app was developed by Umaar Abdullah Morshed and Obaydur Salman.\nWe
-        are both at our Sophomore year at the University of Dhaka.This app was developed as a project for our application development lab
-        in the 4th semester of our Bachelors Degree in Science.\nWe
-        enjoyed making this app.
+        The pages updates when worldometer.com Updates.\n\nClick on the graph button on the screens where it is
+        available to see visualizations of the data. And you can click/hover on the graphs to interact with the graphs.\n\nThis app was developed by\n
+        Umaar Abdullah Morshed (umaar71@gmail.com)\n and Obaydur Salman(obaydursalman19@gmail.com).\n\nWe are both at our Sophomore year at the University of
+        Dhaka.\nThis app was developed as a project for our application development lab
+        in the 4th semester of our Bachelors Degree in Science in CS.
     </string>
     <string name="refresh">Refresh</string>
 
