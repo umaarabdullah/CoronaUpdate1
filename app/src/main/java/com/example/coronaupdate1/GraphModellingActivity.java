@@ -293,7 +293,7 @@ public class GraphModellingActivity extends AppCompatActivity {
         String totalCasesFormatted = stringNumber.bigNumberFormatting(selectedCountryData.get(listSize-1).getTotalCases());
 
         // prettifying the pie chart title
-        pie.title("Distribution of Total Cases ( " + countryName + " : " + totalCasesFormatted +
+        pie.title("Distribution of Total Cases : " + countryName + " : " + totalCasesFormatted +
                 " Date-" + selectedCountryData.get(listSize-1).getDate());
         pie.title().fontColor("#000000");
         pie.title().fontOpacity(10);
@@ -474,13 +474,13 @@ public class GraphModellingActivity extends AppCompatActivity {
         cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
 
         // prettifying chart tile
-        cartesian.title("Trends of Total Tests and Cases of " + countryName);
+        cartesian.title("Infection/Positivity Rate - Line Trend " + countryName);
         cartesian.title().fontOpacity(10);
         cartesian.title().fontStyle("bold");
         cartesian.title().fontColor("#000000");
 
         // prettifying yAxis tile
-        cartesian.yAxis(0).title("Frequency (Tally)");
+        cartesian.yAxis(0).title("Infection Rate (%)");
         cartesian.yAxis(0).title().fontOpacity(10);
         cartesian.yAxis(0).title().fontStyle("bold");
         cartesian.yAxis(0).title().fontColor("#000000");
@@ -521,7 +521,7 @@ public class GraphModellingActivity extends AppCompatActivity {
         Mapping series2Mapping = set.mapAs("{ x: 'x', value: 'value2' }");
 
         Line series1 = cartesian.line(series1Mapping);
-        series1.name("Total Tests");
+        series1.name("Infection Rate");
         series1.hovered().markers().enabled(true);
         series1.hovered().markers()
                 .type(MarkerType.CIRCLE)
@@ -536,7 +536,7 @@ public class GraphModellingActivity extends AppCompatActivity {
         series1.stroke("#BAB86C");
 
         Line series2 = cartesian.line(series2Mapping);
-        series2.name("Total Cases");
+        series2.name("Daily Tests");
         series2.hovered().markers().enabled(true);
         series2.hovered().markers()
                 .type(MarkerType.CIRCLE)
