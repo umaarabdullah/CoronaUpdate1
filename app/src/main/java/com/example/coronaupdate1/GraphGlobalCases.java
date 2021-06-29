@@ -92,7 +92,8 @@ public class GraphGlobalCases extends AppCompatActivity {
         mRootRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                // iterating through dates and adding the data to the List
+
+                // iterating through all dates and adding the data to the List
                 for (DataSnapshot dateDataSnapShot : snapshot.getChildren()){
                     DbGlobalData dbGlobalData = dateDataSnapShot.getValue(DbGlobalData.class);
 

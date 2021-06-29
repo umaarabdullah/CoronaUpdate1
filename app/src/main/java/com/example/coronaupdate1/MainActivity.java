@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.coronaupdate1.DataModel.CountryData;
 import com.example.coronaupdate1.DataModel.DbCountryData;
+import com.example.coronaupdate1.DataModel.DbCountryDataInfection;
 import com.example.coronaupdate1.DataModel.DbGlobalData;
 import com.example.coronaupdate1.DataModel.GlobalData;
 import com.example.coronaupdate1.api.RetrofitClient;
@@ -18,8 +20,11 @@ import com.example.coronaupdate1.fragments.AboutFragment;
 import com.example.coronaupdate1.fragments.CountryFragment;
 import com.example.coronaupdate1.fragments.GlobalFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -44,9 +49,11 @@ public class MainActivity extends AppCompatActivity
     private String formattedDate;
     private String yesterdayDate;
     private String localTime;
-    private final String newDayStartingTime = "07:00";      // country api response update at around 7AM
+    private final String newDayStartingTime = "07:00";      // country api response update at around 7AM (Aprox) (+6 GMT). New data is written to the database as new date
 
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+    DatabaseReference mRootRef1 = FirebaseDatabase.getInstance().getReference("CountryData");   // reference to the CountryData branch used in setting infection data
+    DatabaseReference mRootRef2 = FirebaseDatabase.getInstance().getReference();    // another reference to the root to be used for setting infection data
 
 
     @Override
@@ -93,6 +100,8 @@ public class MainActivity extends AppCompatActivity
         // called bangladesh country data method but waiting for response
         getCountryData();
 
+        // setting infection data, calling call to set the event Listener
+        setInfectionRateData();
     }
 
     public void getGlobalData(){
@@ -121,12 +130,14 @@ public class MainActivity extends AppCompatActivity
                     DbGlobalData dbGlobalData = new DbGlobalData(Integer.toString(globalData.getNewCases()), yesterdayDate);
 
                     Log.d(TAG, "getGlobalData onResponse: is today's data actually today's data ? false");
+                    // write to the database
                     setFireBaseDbGlobalData(dbGlobalData, false);
                 }
                 else{
                     DbGlobalData dbGlobalData = new DbGlobalData(Integer.toString(globalData.getNewCases()), formattedDate);
 
                     Log.d(TAG, "getGlobalData onResponse: is today's data actually today's data ? true");
+                    // write to the database
                     setFireBaseDbGlobalData(dbGlobalData, true);
                 }
 
@@ -151,13 +162,13 @@ public class MainActivity extends AppCompatActivity
 
                 Toast.makeText(getApplicationContext(), "Country List Ready", Toast.LENGTH_SHORT).show();
 
-                Log.d("CountryDataList", "CountryName at index 1 = " + countryDataList.get(1).getCountryName());
-                Log.d(TAG, "onResponse: CountryDataList size : " + countryDataList.size());
+                Log.d(TAG, "getCountryData onResponse : CountryName at index 1 = " + countryDataList.get(1).getCountryName());
+                Log.d(TAG, "getCountryData onResponse : CountryDataList size : " + countryDataList.size());
 
                 // parsing data which are to be written on the firebase realtime database
                 // need to check if indeed it today date's data as the timezone is +6, we do this by comparing time that is the current less than 5:50 Am.
                 // negative means localTime is smaller it means actual date is yesterday, 0 means equal, positive means localtime is greater and actual date is today
-                Log.d(TAG, "onResponse: localTime Compare to NewStartdayTime : " + localTime.compareTo(newDayStartingTime));
+                Log.d(TAG, "getCountryData onResponse : localTime Compare to NewStartdayTime : " + localTime.compareTo(newDayStartingTime));
                 if(localTime.compareTo(newDayStartingTime) < 0) {
                     for (int i = 0; i < countryDataList.size(); i++) {
 
@@ -174,7 +185,9 @@ public class MainActivity extends AppCompatActivity
                                         Integer.toString(countryDataList.get(i).getTotalTests()),
                                         yesterdayDate);
 
+                        // write to the database
                         setFireBaseDbCountryData(dbCountryData, false);
+
                     }
                 }
                 else {
@@ -193,7 +206,9 @@ public class MainActivity extends AppCompatActivity
                                         Integer.toString(countryDataList.get(i).getTotalTests()),
                                         formattedDate);
 
+                        // write to the database
                         setFireBaseDbCountryData(dbCountryData, true);
+
                     }
                 }
             }
@@ -276,7 +291,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     // writing global data on firebase realtime database
-    public void setFireBaseDbGlobalData(DbGlobalData dbGlobalData, boolean flag){
+    private void setFireBaseDbGlobalData(DbGlobalData dbGlobalData, boolean flag){
 
         // flag identifies if it is a new date of not. True means new date data and false means yesterday date data
         if(flag){
@@ -288,7 +303,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     // writing country data on firebase realtime database
-    public void setFireBaseDbCountryData(DbCountryData dbCountryData, boolean flag){
+    private void setFireBaseDbCountryData(DbCountryData dbCountryData, boolean flag){
         // flag identifies if it is a new date of not. True means new date data and false means yesterday date data
         if(flag){
             // as there cannot be '.' in the firebase path
@@ -316,6 +331,77 @@ public class MainActivity extends AppCompatActivity
 
             mRootRef.child("CountryData").child(dbCountryData.getCountryName()).child(yesterdayDate).setValue(dbCountryData);
         }
+    }
+
+    private void setInfectionRateData(){
+
+        // retrieving/reading data
+        mRootRef1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                Log.d(TAG, "setInfectionData onDataChange: ");
+
+                // iterating through all the dates and adding the data and calculating infection rate and adding it to the database
+                for (DataSnapshot countryDataSnapshot : snapshot.getChildren()){
+                    Log.d(TAG, "setInfectionData onDataChange: Country - Name key : " + countryDataSnapshot.getKey());
+
+                    // declaring instance objects
+                    DbCountryData yesterdayDbData = null;
+                    DbCountryData dbCountryData = null;
+                    boolean firstDataFetched = false;
+
+                    for (DataSnapshot dateDataSnapshot : countryDataSnapshot.getChildren()){
+                        //Log.d(TAG, "setInfectionData onDataChange: Date - inside key : " + dateDataSnapshot.getKey());
+                        // storing yesterday data and finding infection rate
+                        if(firstDataFetched) {
+                            yesterdayDbData = dbCountryData;
+                        }
+
+                        // fetching data
+                        dbCountryData = dateDataSnapshot.getValue(DbCountryData.class);
+                        //Log.d(TAG, "onDataChange: infection rate db Country data date : " + dbCountryData.getDate());
+                        firstDataFetched = true;
+
+                        // after getting the new dbCountryData we compare with yesterdayDbData and calculate the infection rate by finding the number of new tests
+                        if(yesterdayDbData != null){
+
+                            DbCountryDataInfection dbCountryDataInfection;
+                            String todayDate = dbCountryData.getDate();
+
+                            // finding infection rate
+                            // will have to type cast the int variables later
+                            int newTests = Integer.parseInt(dbCountryData.getTotalTests()) - Integer.parseInt(yesterdayDbData.getTotalTests());
+                            int newCases = Integer.parseInt(dbCountryData.getNewCases());
+                            double infectionRate = 0.00;
+
+                            // check for division by 0
+                            if(newTests != 0) {
+                                infectionRate = ((double) newCases / newTests) * 100;   // ***** TYPE CAST TO DOUBLE ******
+                                Log.d(TAG, "onDataChange: inf rate : " + infectionRate + " " + countryDataSnapshot.getKey());
+                            }
+                            Log.d(TAG, "setInfectionData onDataChange: newTests : " + newTests + " newCases : " + newCases
+                                    + " infectionRate : " + String.format("%.2f", infectionRate) + " " + countryDataSnapshot.getKey());
+
+                            // constructing a dbCountryDataInfection object
+                            dbCountryDataInfection = new DbCountryDataInfection(String.format("%.2f", infectionRate) , todayDate);
+
+                            // writing data to the branch CountryDataInfection
+                            mRootRef2.child("CountryDataInfection").child(dbCountryData.getCountryName())
+                                    .child(todayDate).setValue(dbCountryDataInfection);
+                        }
+                    }
+
+                }
+
+                Log.d(TAG, "onDataChange: country infectionRate data write successful");
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     @Override

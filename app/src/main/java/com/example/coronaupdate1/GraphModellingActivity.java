@@ -72,10 +72,10 @@ public class GraphModellingActivity extends AppCompatActivity {
 
 
             // referencing the correct branch in the database. I.e on the basis of countryName whose detail screen was clicked
-            if(countryName == "S. Korea"){
+            if(countryName.equals("S. Korea")){
                 mRootRef = FirebaseDatabase.getInstance().getReference().child("CountryData").child("South Korea");
             }
-            else if (countryName == "St. Barth"){
+            else if (countryName.equals("St. Barth")){
                 mRootRef = FirebaseDatabase.getInstance().getReference().child("CountryData").child("Saint Barth");
             }
             else{
@@ -88,16 +88,19 @@ public class GraphModellingActivity extends AppCompatActivity {
             mRootRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                    // iterating through dates and adding the data at each date to the list
+
+                    // declaring instance objects
+                    DbCountryData dbCountryData = null;
+
+                    // iterating through all the dates and adding the data at each date to the list
                     for (DataSnapshot dateDataSnapshot : snapshot.getChildren()){
 
                         // fetching data
-                        DbCountryData dbCountryData = dateDataSnapshot.getValue(DbCountryData.class);
+                        dbCountryData = dateDataSnapshot.getValue(DbCountryData.class);
 
                         // adding to the list
                         selectedCountryData.add(dbCountryData);
 
-                        Log.d(TAG, "onDataChange: countryName " + "dbCountryData.getCountryName()");
                         Log.d(TAG, "onDataChange: childrenCount " + dateDataSnapshot.getChildrenCount());
                         Log.d(TAG, "onDataChange: Key " + dateDataSnapshot.getKey());
                     }
@@ -109,7 +112,7 @@ public class GraphModellingActivity extends AppCompatActivity {
                     setNewDeathsColumnChart();
                     setPieChart();
                     setLineChartDailyCasesDeathsRecovered();
-                    setLineChartTotalTestsCases();
+                    setInfectionRate();
                 }
 
                 @Override
@@ -453,7 +456,7 @@ public class GraphModellingActivity extends AppCompatActivity {
 
     }
 
-    private void setLineChartTotalTestsCases(){
+    private void setInfectionRate(){
 
         // Line Chart using anyChart
         AnyChartView anyChartView = findViewById(R.id.any_chart_view_c_tests_cases_curve);
