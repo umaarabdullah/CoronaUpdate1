@@ -82,29 +82,22 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "onCreate: today calendar local time : " + localTime + " newDayStartingTime : " + newDayStartingTime );
 
 
-        // called global data method before default screen but waiting for response
-        getGlobalData();
-        Log.d(TAG, "");
-
-        // global data will be null as it hasn't been instantiated yet it is waiting for a response of the http call
-        if(globalData == null)
-            Log.d(TAG, "onCreate: globalData is null, has not been instantiated");
-
         // bottomNavListener connected
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation_bar);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
+        // called global data method before default screen but waiting for response
+        getGlobalData();
+
         // called all country data method but waiting for response
         getAllCountryData();
-
-        // called bangladesh country data method but waiting for response
-        getCountryData();
 
         // setting infection data, calling call to set the event Listener
         setInfectionRateData();
     }
 
     public void getGlobalData(){
+
         Call<GlobalData> call = RetrofitClient.getInstance().getMyApi().getGlobalData();
         call.enqueue(new Callback<GlobalData>() {
             @Override
@@ -112,8 +105,12 @@ public class MainActivity extends AppCompatActivity
 
                 // records the data received from http call response as plain old java objects (POJO)
                 globalData = response.body();
-                if(globalData == null)
-                    Log.d(TAG, "getGlobalData onResponse: null" );
+
+                // checking if the request returned data or not, if not then the app will crash so a condition
+                if(globalData == null){
+                    Toast.makeText(getApplicationContext(), "Http Request Failed ", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 //default Fragment will be loaded when there is a response on the call of globalData
                 loadFragment(new GlobalFragment(globalData));
@@ -154,6 +151,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void getAllCountryData(){
+
         Call <List<CountryData>> call = RetrofitClient.getInstance().getMyApi().getAllCountryData();
         call.enqueue(new Callback<List<CountryData>>() {
             @Override
@@ -161,6 +159,12 @@ public class MainActivity extends AppCompatActivity
 
                 // records the data received from http call response as plain old java objects (POJO)
                 countryDataList = response.body();
+
+                // checking if the request returned data or not, if not then the app will crash so a condition
+                if(countryDataList == null){
+                    Toast.makeText(getApplicationContext(), "Http Request Failed ", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 Toast.makeText(getApplicationContext(), "Country List Ready", Toast.LENGTH_SHORT).show();
 
@@ -217,25 +221,6 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onFailure(Call<List<CountryData>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public void getCountryData(){
-        Call<CountryData> call = RetrofitClient.getInstance().getMyApi().getCountryData("bangladesh");
-        call.enqueue(new Callback<CountryData>() {
-            @Override
-            public void onResponse(Call<CountryData> call, Response<CountryData> response) {
-
-                // records the data received from http call response as plain old java objects (POJO)
-                countryData = response.body();
-
-                Log.d("CountryDataQuery ", "NewCases = " + countryData.getNewCases());
-            }
-
-            @Override
-            public void onFailure(Call<CountryData> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -354,7 +339,7 @@ public class MainActivity extends AppCompatActivity
                     boolean firstDataFetched = false;
 
                     for (DataSnapshot dateDataSnapshot : countryDataSnapshot.getChildren()){
-                        //Log.d(TAG, "setInfectionData onDataChange: Date - inside key : " + dateDataSnapshot.getKey());
+
                         // storing yesterday data and finding infection rate
                         if(firstDataFetched) {
                             yesterdayDbData = dbCountryData;
@@ -362,7 +347,6 @@ public class MainActivity extends AppCompatActivity
 
                         // fetching data
                         dbCountryData = dateDataSnapshot.getValue(DbCountryData.class);
-                        //Log.d(TAG, "onDataChange: infection rate db Country data date : " + dbCountryData.getDate());
                         firstDataFetched = true;
 
                         // after getting the new dbCountryData we compare with yesterdayDbData and calculate the infection rate by finding the number of new tests
@@ -377,13 +361,10 @@ public class MainActivity extends AppCompatActivity
                             int newCases = Integer.parseInt(dbCountryData.getNewCases());
                             double infectionRate = 0.00;
 
-                            // check for division by 0
+                            // check for division by 0 and calculate the infection rate up to two decimal places
                             if(newTests != 0) {
                                 infectionRate = ((double) newCases / newTests) * 100;   // ***** TYPE CAST TO DOUBLE ******
-                                Log.d(TAG, "onDataChange: inf rate : " + infectionRate + " " + countryDataSnapshot.getKey());
                             }
-                            //Log.d(TAG, "setInfectionData onDataChange: newTests : " + newTests + " newCases : " + newCases
-                                //    + " infectionRate : " + String.format("%.2f", infectionRate) + " " + countryDataSnapshot.getKey());
 
                             // constructing a dbCountryDataInfection object
                             dbCountryDataInfection = new DbCountryDataInfection(String.format("%.2f", infectionRate) , todayDate);
