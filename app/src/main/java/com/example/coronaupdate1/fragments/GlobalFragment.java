@@ -26,11 +26,12 @@ import org.jetbrains.annotations.NotNull;
 public class GlobalFragment extends Fragment {
 
     private static final String TAG = "Global Fragment";
-    private GlobalData globalData;
+    private final GlobalData globalData;
 
     public GlobalFragment(GlobalData globalData){
         this.globalData = globalData;
     }
+
 
     @Nullable
     @org.jetbrains.annotations.Nullable

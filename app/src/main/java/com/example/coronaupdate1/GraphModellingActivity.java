@@ -73,100 +73,125 @@ public class GraphModellingActivity extends AppCompatActivity {
             countryName = getIntent().getStringExtra("country_name");
             Log.d(TAG, "onCreate: got intent");
 
+            // referencing country data branch in the json tree in firebase
+            setReferenceToCountryDataBranch();
 
-            // referencing the correct branch CountryData in the database. I.e on the basis of which country's detail screen was clicked
-            if(countryName.equals("S. Korea")){
-                mRootRef = FirebaseDatabase.getInstance().getReference().child("CountryData").child("South Korea");
-            }
-            else if (countryName.equals("St. Barth")){
-                mRootRef = FirebaseDatabase.getInstance().getReference().child("CountryData").child("Saint Barth");
-            }
-            else{
-                mRootRef = FirebaseDatabase.getInstance().getReference().child("CountryData").child(countryName);
-            }
-            Log.d(TAG, "onCreate: referenced CountryData branch correctly");
+            // referencing country data infection branch in the json tree in firebase
+            setReferenceToCountryDataInfectionBranch();
 
+            // reading data from the country data branch from firebase realtime database
+            setEventListenerOnCountryDataBranchReference();
 
-            // referencing the correct branch CountryDataInfection in the database. I.e on the basis of which country's detail screen was clicked
-            if(countryName.equals("S. Korea")){
-                mRootRef1 = FirebaseDatabase.getInstance().getReference().child("CountryDataInfection").child("South Korea");
-            }
-            else if (countryName.equals("St. Barth")){
-                mRootRef1 = FirebaseDatabase.getInstance().getReference().child("CountryDataInfection").child("Saint Barth");
-            }
-            else{
-                mRootRef1 = FirebaseDatabase.getInstance().getReference().child("CountryDataInfection").child(countryName);
-            }
-            Log.d(TAG, "onCreate: referenced CountryDataInfection branch correctly");
-
-
-            // retrieve data from the database using the reference
-            mRootRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-
-                    // declaring instance objects
-                    DbCountryData dbCountryData;
-
-                    // iterating through all the dates and adding the data at each date to the list
-                    for (DataSnapshot dateDataSnapshot : snapshot.getChildren()){
-
-                        // fetching data
-                        dbCountryData = dateDataSnapshot.getValue(DbCountryData.class);
-
-                        // adding to the list
-                        selectedCountryData.add(dbCountryData);
-
-                        Log.d(TAG, "onDataChange: childrenCount " + dateDataSnapshot.getChildrenCount());
-                        Log.d(TAG, "onDataChange: Key " + dateDataSnapshot.getKey());
-                    }
-                    Log.d(TAG, "onCreate: CountryData retrieved successfully");
-
-                    // after data is fetched several charts are drawn
-                    setNewCasesColumnChart();
-                    setNewDeathsColumnChart();
-                    setPieChart();
-                    setLineChartDailyCasesDeathsRecovered();
-                }
-
-                @Override
-                public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
-                }
-            });
-
-            // retrieve data from the database using the reference
-            mRootRef1.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-
-                    // declaring instance objects
-                    DbCountryDataInfection dbCountryDataInfection;
-
-                    // iterating through all the dates and adding the data at each date to the list
-                    for (DataSnapshot dateDataSnapshot : snapshot.getChildren()){
-
-                        // fetching data
-                        dbCountryDataInfection = dateDataSnapshot.getValue(DbCountryDataInfection.class);
-
-                        // adding to the list
-                        infectionRateData.add(dbCountryDataInfection);
-
-                        Log.d(TAG, "onDataChange: childrenCount " + dateDataSnapshot.getChildrenCount());
-                        Log.d(TAG, "onDataChange: Key " + dateDataSnapshot.getKey());
-                    }
-                    Log.d(TAG, "onCreate: infection data retrieved successfully");
-
-                    setInfectionRate();
-                }
-
-                @Override
-                public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
-                }
-            });
+            // reading data from the country data branch from firebase realtime database
+            setEventListenerOnCountryDataInfectionBranchReference();
 
         }
+    }
+
+
+    private void setEventListenerOnCountryDataBranchReference(){
+
+        // retrieve data from the database using the reference
+        mRootRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+
+                // declaring instance objects
+                DbCountryData dbCountryData;
+
+                // iterating through all the dates and adding the data at each date to the list
+                for (DataSnapshot dateDataSnapshot : snapshot.getChildren()){
+
+                    // fetching data
+                    dbCountryData = dateDataSnapshot.getValue(DbCountryData.class);
+
+                    // adding to the list
+                    selectedCountryData.add(dbCountryData);
+
+                    Log.d(TAG, "onDataChange: childrenCount " + dateDataSnapshot.getChildrenCount());
+                    Log.d(TAG, "onDataChange: Key " + dateDataSnapshot.getKey());
+                }
+                Log.d(TAG, "onCreate: CountryData retrieved successfully");
+
+                // after data is fetched several charts are drawn
+                setNewCasesColumnChart();
+                setNewDeathsColumnChart();
+                setPieChart();
+                setLineChartDailyCasesDeathsRecovered();
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    private void setEventListenerOnCountryDataInfectionBranchReference(){
+
+        // retrieve data from the database using the reference
+        mRootRef1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+
+                // declaring instance objects
+                DbCountryDataInfection dbCountryDataInfection;
+
+                // iterating through all the dates and adding the data at each date to the list
+                for (DataSnapshot dateDataSnapshot : snapshot.getChildren()){
+
+                    // fetching data
+                    dbCountryDataInfection = dateDataSnapshot.getValue(DbCountryDataInfection.class);
+
+                    // adding to the list
+                    infectionRateData.add(dbCountryDataInfection);
+
+                    Log.d(TAG, "onDataChange: childrenCount " + dateDataSnapshot.getChildrenCount());
+                    Log.d(TAG, "onDataChange: Key " + dateDataSnapshot.getKey());
+                }
+                Log.d(TAG, "onCreate: infection data retrieved successfully");
+
+                setInfectionRate();
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    private void setReferenceToCountryDataBranch(){
+
+        // referencing the correct branch CountryData in the database. I.e on the basis of which country's detail screen was clicked
+        if(countryName.equals("S. Korea")){
+            mRootRef = FirebaseDatabase.getInstance().getReference().child("CountryData").child("South Korea");
+        }
+        else if (countryName.equals("St. Barth")){
+            mRootRef = FirebaseDatabase.getInstance().getReference().child("CountryData").child("Saint Barth");
+        }
+        else{
+            mRootRef = FirebaseDatabase.getInstance().getReference().child("CountryData").child(countryName);
+        }
+        Log.d(TAG, "onCreate: referenced CountryData branch correctly");
+
+    }
+
+    private void setReferenceToCountryDataInfectionBranch(){
+
+        // referencing the correct branch CountryDataInfection in the database. I.e on the basis of which country's detail screen was clicked
+        if(countryName.equals("S. Korea")){
+            mRootRef1 = FirebaseDatabase.getInstance().getReference().child("CountryDataInfection").child("South Korea");
+        }
+        else if (countryName.equals("St. Barth")){
+            mRootRef1 = FirebaseDatabase.getInstance().getReference().child("CountryDataInfection").child("Saint Barth");
+        }
+        else{
+            mRootRef1 = FirebaseDatabase.getInstance().getReference().child("CountryDataInfection").child(countryName);
+        }
+        Log.d(TAG, "onCreate: referenced CountryDataInfection branch correctly");
     }
 
     private void setNewCasesColumnChart(){

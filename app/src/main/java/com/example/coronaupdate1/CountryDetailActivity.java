@@ -31,9 +31,7 @@ public class CountryDetailActivity extends AppCompatActivity {
     private String totalRecovered;
     private String newRecovered;
     private String totalTests;
-    private ArrayList<String> countryNamesArrayList = new ArrayList<String>();
-    private ArrayList<String> newCasesArrayList = new ArrayList<String>();
-    private ArrayList<String> newDeathsArrayList = new ArrayList<String>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +55,7 @@ public class CountryDetailActivity extends AppCompatActivity {
                 && getIntent().hasExtra("active_cases") && getIntent().hasExtra("total_cases")
                 && getIntent().hasExtra("new_cases") && getIntent().hasExtra("total_deaths")
                 && getIntent().hasExtra("new_deaths") && getIntent().hasExtra("total_recovered")
-                && getIntent().hasExtra("new_recovered") && getIntent().hasExtra("total_tests")
-                && getIntent().hasExtra("country_name_array_list")
-                && getIntent().hasExtra("new_cases_array_list")
-                && getIntent().hasExtra("new_deaths_array_list")){
+                && getIntent().hasExtra("new_recovered") && getIntent().hasExtra("total_tests")){
 
             // getting the data which was passed into the intent from the previous activity
             countryName = getIntent().getStringExtra("country_name");
@@ -73,10 +68,6 @@ public class CountryDetailActivity extends AppCompatActivity {
             totalRecovered = getIntent().getStringExtra("total_recovered");
             newRecovered = getIntent().getStringExtra("new_recovered");
             totalTests = getIntent().getStringExtra("total_tests");
-
-            countryNamesArrayList = getIntent().getStringArrayListExtra("country_name_array_list");
-            newCasesArrayList = getIntent().getStringArrayListExtra("new_cases_array_list");
-            newDeathsArrayList = getIntent().getStringArrayListExtra("new_deaths_array_list");
 
             StringNumber stringNumber = new StringNumber();
 

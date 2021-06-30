@@ -65,9 +65,18 @@ public class GraphGlobalCases extends AppCompatActivity {
         // enabling the up button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // get the data which passed into the intent from the previous activity
+        getIncomingIntentExtras();
+
+        // reading data from the firebase database
+        setEventListenerOnGlobalDataBranchReference();
+    }
+
+    private void getIncomingIntentExtras(){
+
         // checking if the appropriate intent extras were received properly or not
         if(getIntent().hasExtra("total_cases") && getIntent().hasExtra("active_cases")
-        && getIntent().hasExtra("total_deaths") && getIntent().hasExtra("total_recovered")){
+                && getIntent().hasExtra("total_deaths") && getIntent().hasExtra("total_recovered")){
 
             // getting the data which was passed from the previous activity
             totalCases = Integer.parseInt(getIntent().getStringExtra("total_cases"));
@@ -87,6 +96,10 @@ public class GraphGlobalCases extends AppCompatActivity {
 
         }
 
+    }
+
+
+    private void setEventListenerOnGlobalDataBranchReference(){
 
         // retrieve data from firebase
         mRootRef.addValueEventListener(new ValueEventListener() {
@@ -101,6 +114,7 @@ public class GraphGlobalCases extends AppCompatActivity {
                 }
 
                 // drawing the the charts
+                // usually the onDataChange method gets called around last of the activity lifecycle (found by using logs)
                 setPieChart();
                 setNewCasesColumnChart();
 
@@ -113,6 +127,7 @@ public class GraphGlobalCases extends AppCompatActivity {
             }
 
         });
+
     }
 
     private void setPieChart(){

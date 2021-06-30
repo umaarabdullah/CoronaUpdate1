@@ -49,11 +49,18 @@ public class MainActivity extends AppCompatActivity
     private String formattedDate;
     private String yesterdayDate;
     private String localTime;
-    private final String newDayStartingTime = "07:00";      // country api response update at around 7AM (Aprox) (+6 GMT). New data is written to the database as new date
 
+    // country api response update at around 7AM (Aprox) (+6 GMT). New data is written to the database as new date
+    private final String newDayStartingTime = "07:00";
+
+    // firebase database reference to the root of the json tree
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-    DatabaseReference mRootRef1 = FirebaseDatabase.getInstance().getReference("CountryData");   // reference to the CountryData branch used in setting infection data
-    DatabaseReference mRootRef2 = FirebaseDatabase.getInstance().getReference();    // another reference to the root to be used for setting infection data
+
+    // reference to the CountryData branch used in setting infection data
+    DatabaseReference mRootRef1 = FirebaseDatabase.getInstance().getReference("CountryData");
+
+    // another firebase database reference to the root of the json tree to be used for setting infection data
+    DatabaseReference mRootRef2 = FirebaseDatabase.getInstance().getReference();
 
 
     @Override
@@ -236,7 +243,8 @@ public class MainActivity extends AppCompatActivity
         switch (item.getItemId()){
             case R.id.navigation_global:
                 Toast.makeText(this, "Global" , Toast.LENGTH_SHORT).show();
-                fragment = new GlobalFragment(globalData);  // passing GlobalData to GlobalFragment
+                // passing GlobalData to GlobalFragment
+                fragment = new GlobalFragment(globalData);
                 break;
 
             case R.id.navigation_country:
@@ -248,7 +256,8 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(this, "Country" , Toast.LENGTH_SHORT).show();
 
                 // passing countryDataList to CountryFragment
-                fragment = new CountryFragment(MainActivity.this, countryDataList);     // using getApplicationContext() caused error when creating the detail screen  but MainActivity.this fixed it
+                // using getApplicationContext() caused error when creating the detail screen but using MainActivity.this fixed it
+                fragment = new CountryFragment(MainActivity.this, countryDataList);
                 break;
 
             case R.id.navigation_about:
@@ -363,7 +372,8 @@ public class MainActivity extends AppCompatActivity
 
                             // check for division by 0 and calculate the infection rate up to two decimal places
                             if(newTests != 0) {
-                                infectionRate = ((double) newCases / newTests) * 100;   // ***** TYPE CAST TO DOUBLE ******
+                                // ***** TYPE CAST TO DOUBLE ******
+                                infectionRate = ((double) newCases / newTests) * 100;
                             }
 
                             // constructing a dbCountryDataInfection object
@@ -388,6 +398,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    // handling the refresh button
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 

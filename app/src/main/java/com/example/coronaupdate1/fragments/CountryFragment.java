@@ -34,14 +34,12 @@ public class CountryFragment extends Fragment {
     private static final String TAG = "CountryFragment";
     private final Context context;
     private final List<CountryData> countryDataList;
-    private ArrayList<String> countryNamesArrayList = new ArrayList<String>();
-    private ArrayList<String> newCasesArrayList = new ArrayList<String>();
-    private ArrayList<String> newDeathsArrayList = new ArrayList<String>();
 
     public CountryFragment(Context context, List<CountryData> countryDataList){
         this.context = context;
         this.countryDataList = countryDataList;
     }
+
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -54,9 +52,6 @@ public class CountryFragment extends Fragment {
         // so that the actionBar widgets are displayed
         setHasOptionsMenu(true);
 
-        // get the ArrayList<String> of countryName, newCases, NewDeaths
-        getAttributeArrayLists();
-
         // get the reference of the recyclerView
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 
@@ -66,8 +61,9 @@ public class CountryFragment extends Fragment {
 
         // call the constructor of adapter class to send reference and data to adapter
         // context was passed from main activity via constructor
+        // set the Adapter to RecyclerView
         CustomCountryAdapter customCountryAdapter = new CustomCountryAdapter(context, countryDataList);
-        recyclerView.setAdapter(customCountryAdapter); // set the Adapter to RecyclerView
+        recyclerView.setAdapter(customCountryAdapter);
 
         return view;
     }
@@ -106,14 +102,15 @@ public class CountryFragment extends Fragment {
     // what to do with query
     // we open the countryDetailActivity of the queried country (countryName)
     private void queryProcessing(String query){
-        
+        Log.d(TAG, "queryProcessing: before matching");
+        String queryAllLowerCase = query.toLowerCase();
+
         for (int i=0; i<countryDataList.size(); i++){
 
-            Log.d(TAG, "queryProcessing: countryName " +
-                    countryDataList.get(i).getCountryName().toLowerCase() + " query " + query.toLowerCase());
+            String countryNameAllLowerCase = countryDataList.get(i).getCountryName().toLowerCase();
 
-            if(countryDataList.get(i).getCountryName().toLowerCase().equals(query.toLowerCase())){
-
+            if(countryNameAllLowerCase.equals( queryAllLowerCase )){
+                Log.d(TAG, "queryProcessing: matched detail activity starting");
                 // intent switching to another activity (CountryDetailActivity)
                 Intent intent = new Intent(getContext(), CountryDetailActivity.class);
 
@@ -128,25 +125,12 @@ public class CountryFragment extends Fragment {
                 intent.putExtra("new_recovered", Integer.toString(countryDataList.get(i).getNewRecovered()));
                 intent.putExtra("total_tests", Integer.toString(countryDataList.get(i).getTotalTests()));
 
-                intent.putStringArrayListExtra("country_name_array_list", countryNamesArrayList);
-                intent.putStringArrayListExtra("new_cases_array_list", newCasesArrayList);
-                intent.putStringArrayListExtra("new_deaths_array_list", newDeathsArrayList);
-
                 context.startActivity(intent);
 
                 break;
             }
-        }
-    }
 
-    private ArrayList<String> getAttributeArrayLists() {
-        for (int i = 0; i<countryDataList.size(); i++){
-
-            countryNamesArrayList.add(countryDataList.get(i).getCountryName() );
-            newCasesArrayList.add(Integer.toString(countryDataList.get(i).getNewCases()));
-            newDeathsArrayList.add(Integer.toString(countryDataList.get(i).getNewDeaths()));
         }
-        return countryNamesArrayList;
     }
 
 }
