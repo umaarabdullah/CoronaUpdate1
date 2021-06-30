@@ -352,7 +352,7 @@ public class GraphModellingActivity extends AppCompatActivity {
         cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
 
         // prettifying chart tile
-        cartesian.title("Trends of Daily Cases, Deaths and Recovered of " + countryName);
+        cartesian.title("Trends of Daily Cases, Deaths and Recovered - " + countryName);
         cartesian.title().fontOpacity(10);
         cartesian.title().fontStyle("bold");
         cartesian.title().fontColor("#000000");
@@ -477,7 +477,7 @@ public class GraphModellingActivity extends AppCompatActivity {
         cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
 
         // prettifying chart tile
-        cartesian.title("Infection/Positivity Rate - Line Trend " + countryName);
+        cartesian.title("Infection/Positivity Rate Trend - " + countryName);
         cartesian.title().fontOpacity(10);
         cartesian.title().fontStyle("bold");
         cartesian.title().fontColor("#000000");

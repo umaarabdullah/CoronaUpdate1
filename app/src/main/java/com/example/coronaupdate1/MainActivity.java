@@ -112,6 +112,8 @@ public class MainActivity extends AppCompatActivity
 
                 // records the data received from http call response as plain old java objects (POJO)
                 globalData = response.body();
+                if(globalData == null)
+                    Log.d(TAG, "getGlobalData onResponse: null" );
 
                 //default Fragment will be loaded when there is a response on the call of globalData
                 loadFragment(new GlobalFragment(globalData));
@@ -304,6 +306,7 @@ public class MainActivity extends AppCompatActivity
 
     // writing country data on firebase realtime database
     private void setFireBaseDbCountryData(DbCountryData dbCountryData, boolean flag){
+
         // flag identifies if it is a new date of not. True means new date data and false means yesterday date data
         if(flag){
             // as there cannot be '.' in the firebase path
@@ -339,11 +342,11 @@ public class MainActivity extends AppCompatActivity
         mRootRef1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                Log.d(TAG, "setInfectionData onDataChange: ");
+                Log.d(TAG, "setInfectionData onDataChange: start");
 
                 // iterating through all the dates and adding the data and calculating infection rate and adding it to the database
                 for (DataSnapshot countryDataSnapshot : snapshot.getChildren()){
-                    Log.d(TAG, "setInfectionData onDataChange: Country - Name key : " + countryDataSnapshot.getKey());
+                    //Log.d(TAG, "setInfectionData onDataChange: Country - Name key : " + countryDataSnapshot.getKey());
 
                     // declaring instance objects
                     DbCountryData yesterdayDbData = null;
@@ -379,8 +382,8 @@ public class MainActivity extends AppCompatActivity
                                 infectionRate = ((double) newCases / newTests) * 100;   // ***** TYPE CAST TO DOUBLE ******
                                 Log.d(TAG, "onDataChange: inf rate : " + infectionRate + " " + countryDataSnapshot.getKey());
                             }
-                            Log.d(TAG, "setInfectionData onDataChange: newTests : " + newTests + " newCases : " + newCases
-                                    + " infectionRate : " + String.format("%.2f", infectionRate) + " " + countryDataSnapshot.getKey());
+                            //Log.d(TAG, "setInfectionData onDataChange: newTests : " + newTests + " newCases : " + newCases
+                                //    + " infectionRate : " + String.format("%.2f", infectionRate) + " " + countryDataSnapshot.getKey());
 
                             // constructing a dbCountryDataInfection object
                             dbCountryDataInfection = new DbCountryDataInfection(String.format("%.2f", infectionRate) , todayDate);
@@ -393,7 +396,7 @@ public class MainActivity extends AppCompatActivity
 
                 }
 
-                Log.d(TAG, "onDataChange: country infectionRate data write successful");
+                Log.d(TAG, "onDataChange: country infectionRate data write successful end");
             }
 
             @Override
