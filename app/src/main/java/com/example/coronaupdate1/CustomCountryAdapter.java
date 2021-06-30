@@ -19,14 +19,13 @@ import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdapter.MyViewHolder> {
 
     private static final String TAG = "CustomAdapter";
     private final Context context;
-    private final List<CountryData> countryDataList;
+    private List<CountryData> countryDataList;
 
 
     public CustomCountryAdapter(Context context, List<CountryData> countryDataList){

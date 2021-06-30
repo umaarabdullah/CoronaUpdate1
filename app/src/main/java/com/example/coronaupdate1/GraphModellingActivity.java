@@ -51,8 +51,8 @@ public class GraphModellingActivity extends AppCompatActivity {
     private DatabaseReference mRootRef;
     private DatabaseReference mRootRef1;
 
-    private final List<DbCountryData> selectedCountryData = new ArrayList<DbCountryData>();        // selected country data by dates
-    private final List<DbCountryDataInfection> infectionRateData = new ArrayList<DbCountryDataInfection>();     // infection data of the selected country by dates
+    private List<DbCountryData> selectedCountryData = new ArrayList<>();              // selected country data by dates
+    private List<DbCountryDataInfection> infectionRateData = new ArrayList<>();       // infection data of the selected country by dates
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -619,14 +619,14 @@ public class GraphModellingActivity extends AppCompatActivity {
 
     }
 
-    private class CustomDataEntryTc extends ValueDataEntry{
+    private static class CustomDataEntryTc extends ValueDataEntry{
 
         CustomDataEntryTc(String x, Double value){
             super(x, value);
         }
     }
 
-    private class CustomDataEntry extends ValueDataEntry{
+    private static class CustomDataEntry extends ValueDataEntry{
 
         CustomDataEntry(String x, Number value, Number value2, Number value3){
             super(x, value);

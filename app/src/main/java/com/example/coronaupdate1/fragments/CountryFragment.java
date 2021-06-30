@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
@@ -33,7 +32,10 @@ public class CountryFragment extends Fragment {
 
     private static final String TAG = "CountryFragment";
     private final Context context;
-    private final List<CountryData> countryDataList;
+    private List<CountryData> countryDataList;
+
+    RecyclerView recyclerView;
+    CustomCountryAdapter customCountryAdapter;
 
     public CountryFragment(Context context, List<CountryData> countryDataList){
         this.context = context;
@@ -53,7 +55,7 @@ public class CountryFragment extends Fragment {
         setHasOptionsMenu(true);
 
         // get the reference of the recyclerView
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 
         // set linear layout manager for vertical orientation
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
@@ -62,7 +64,7 @@ public class CountryFragment extends Fragment {
         // call the constructor of adapter class to send reference and data to adapter
         // context was passed from main activity via constructor
         // set the Adapter to RecyclerView
-        CustomCountryAdapter customCountryAdapter = new CustomCountryAdapter(context, countryDataList);
+        customCountryAdapter = new CustomCountryAdapter(context, countryDataList);
         recyclerView.setAdapter(customCountryAdapter);
 
         return view;
@@ -81,8 +83,11 @@ public class CountryFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Log.d(TAG, "onQueryTextSubmit: query : " + query);
+
+                // to eliminate all the whitespace in query
+                query = query.replaceAll("\\s+","");
                 Toast.makeText(getContext(), query, Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onQueryTextSubmit: query after removing whitespace : " + query);
 
                 queryProcessing(query);
 
@@ -91,6 +96,36 @@ public class CountryFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+
+                // eliminating whitespace and converting to all lowercase
+                newText = newText.replaceAll("\\s+", "");
+                newText = newText.toLowerCase();
+                int newTextSize = newText.length();
+                Log.d(TAG, "onQueryTextChange: new text - " + newText);
+
+                // we take a subString of the country names available from beginning index to the size of newText and compare
+                // those who match we make a new list and use a constructor of customAdapter to create a new object and
+                // then set that new adapter as the adapter of the recylerview
+                List<CountryData> countryDataListNew = new ArrayList<>();
+                for (int i=0; i<countryDataList.size(); i++){
+
+                    String lowCaseCountryName = countryDataList.get(i).getCountryName().toLowerCase();
+                    String subStringCountryName = "";
+
+                    // the subString will be from the beginning index to size of the new text
+                    // newTextSize maybe be longer than a country name
+                    if(lowCaseCountryName.length() >= newTextSize )
+                        subStringCountryName = lowCaseCountryName.substring(0, newTextSize);
+
+                    if(newText.compareTo(subStringCountryName) == 0){
+                        Log.d(TAG, "onQueryTextChange: matched country name - " + lowCaseCountryName + " subString - " + subStringCountryName + " newText - " + newText);
+                        CountryData countryData = countryDataList.get(i);
+                        countryDataListNew.add(countryData);
+                    }
+                }
+                // use constructor and set the adapter
+                customCountryAdapter = new CustomCountryAdapter(context ,countryDataListNew);
+                recyclerView.setAdapter(customCountryAdapter);
 
                 return false;
             }
@@ -102,7 +137,8 @@ public class CountryFragment extends Fragment {
     // what to do with query
     // we open the countryDetailActivity of the queried country (countryName)
     private void queryProcessing(String query){
-        Log.d(TAG, "queryProcessing: before matching");
+        Log.d(TAG, "queryProcessing: before matching query - " + query);
+
         String queryAllLowerCase = query.toLowerCase();
 
         for (int i=0; i<countryDataList.size(); i++){

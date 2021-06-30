@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = "MainActivity";
     private List<CountryData> countryDataList;
     private GlobalData globalData;
-    private CountryData countryData;
+
     private String formattedDate;
     private String yesterdayDate;
     private String localTime;
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity
         yesterdayDate = simpleDateFormat.format(calendar.getTime());
         Log.d(TAG, "onCreate: yesterday calendar date : " +   yesterdayDate);
 
-        // getting time
+        // getting present/current time
         DateFormat time = new SimpleDateFormat("HH:mm");
         localTime = time.format(date);
         Log.d(TAG, "onCreate: today calendar local time : " + localTime + " newDayStartingTime : " + newDayStartingTime );

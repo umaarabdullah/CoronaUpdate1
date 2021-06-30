@@ -48,10 +48,11 @@ public class GraphGlobalCases extends AppCompatActivity {
     private int activeCases;
     private int totalDeaths;
     private int totalRecovered;
+
     private String totalCasesFormatted;
     private String formattedDate;
 
-    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference("GlobalData");
+    private final DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference("GlobalData");
     private List<DbGlobalData> dbGlobalDataList = new ArrayList<DbGlobalData>();    // data by dates
 
     @Override

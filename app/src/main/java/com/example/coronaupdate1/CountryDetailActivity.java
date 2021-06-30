@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.example.coronaupdate1.utility.StringNumber;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 
 public class CountryDetailActivity extends AppCompatActivity {
 
