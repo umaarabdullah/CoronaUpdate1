@@ -40,7 +40,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class GraphModellingActivity extends AppCompatActivity {
@@ -82,7 +87,7 @@ public class GraphModellingActivity extends AppCompatActivity {
             // reading data from the country data branch from firebase realtime database
             setEventListenerOnCountryDataBranchReference();
 
-            // reading data from the country data branch from firebase realtime database
+            // reading data from the country data Infection branch from firebase realtime database
             setEventListenerOnCountryDataInfectionBranchReference();
 
         }
@@ -108,9 +113,34 @@ public class GraphModellingActivity extends AppCompatActivity {
                     // adding to the list
                     selectedCountryData.add(dbCountryData);
 
-                    Log.d(TAG, "onDataChange: childrenCount " + dateDataSnapshot.getChildrenCount());
-                    Log.d(TAG, "onDataChange: Key " + dateDataSnapshot.getKey());
                 }
+
+                // sort by date correctly by using comparator
+                Collections.sort(selectedCountryData, new Comparator<DbCountryData>() {
+                    @Override
+                    public int compare(DbCountryData o1, DbCountryData o2) {
+                        Date date1 = null;
+                        Date date2 = null;
+                        // compare two instances of DbGlobalData
+                        // we compare their dates
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+                        try {
+                            date1 = simpleDateFormat.parse(o1.getDate());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            Log.d(TAG, "compare: errorMessage : " + e.getMessage());
+                        }
+                        try {
+                            date2 = simpleDateFormat.parse(o2.getDate());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            Log.d(TAG, "compare: errorMessage : " + e.getMessage());
+                        }
+
+                        return date1.compareTo(date2);
+                    }
+                });
+
                 Log.d(TAG, "onCreate: CountryData retrieved successfully");
 
                 // after data is fetched several charts are drawn
@@ -147,9 +177,34 @@ public class GraphModellingActivity extends AppCompatActivity {
                     // adding to the list
                     infectionRateData.add(dbCountryDataInfection);
 
-                    Log.d(TAG, "onDataChange: childrenCount " + dateDataSnapshot.getChildrenCount());
-                    Log.d(TAG, "onDataChange: Key " + dateDataSnapshot.getKey());
                 }
+
+                // sort by date correctly by using comparator
+                Collections.sort(infectionRateData, new Comparator<DbCountryDataInfection>() {
+                    @Override
+                    public int compare(DbCountryDataInfection o1, DbCountryDataInfection o2) {
+                        Date date1 = null;
+                        Date date2 = null;
+                        // compare two instances of DbGlobalData
+                        // we compare their dates
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+                        try {
+                            date1 = simpleDateFormat.parse(o1.getDate());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            Log.d(TAG, "compare: errorMessage : " + e.getMessage());
+                        }
+                        try {
+                            date2 = simpleDateFormat.parse(o2.getDate());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            Log.d(TAG, "compare: errorMessage : " + e.getMessage());
+                        }
+
+                        return date1.compareTo(date2);
+                    }
+                });
+
                 Log.d(TAG, "onCreate: infection data retrieved successfully");
 
                 setInfectionRate();
@@ -212,6 +267,7 @@ public class GraphModellingActivity extends AppCompatActivity {
             int cases = Integer.parseInt(selectedCountryData.get(i).getNewCases());
 
             casesData.add(new ValueDataEntry(selectedCountryData.get(i).getDate(), cases));
+
         }
 
         Column column = cartesian.column(casesData);
@@ -227,7 +283,15 @@ public class GraphModellingActivity extends AppCompatActivity {
 
         // prettifying the chart title
         cartesian.animation(true);
-        cartesian.title("Daily New Cases - " + countryName);
+
+        // these country names causes problem in render their graphs as they are too big or uses weird symbols
+        if(countryName.equals("Lao People's Democratic Republic"))
+            cartesian.title("Daily New Cases - " + "Laos");
+        else if(countryName.equals("Côte d'Ivoire"))
+            cartesian.title("Daily New Cases - " + "Cote d.Ivoire");
+        else
+            cartesian.title("Daily New Cases - " + countryName);
+
         cartesian.title().fontColor("#000000");
         cartesian.title().fontOpacity(10);
         cartesian.title().fontStyle("bold");
@@ -297,7 +361,15 @@ public class GraphModellingActivity extends AppCompatActivity {
 
         // prettifying the chart title
         cartesian.animation(true);
-        cartesian.title("Daily New Deaths - " + countryName);
+
+        // these country names causes problem in render their graphs as they are too big or uses weird symbols
+        if(countryName.equals("Lao People's Democratic Republic"))
+            cartesian.title("Daily New Deaths - " + "Laos");
+        else if(countryName.equals("Côte d'Ivoire"))
+            cartesian.title("Daily New Deaths - " + "Cote d.Ivoire");
+        else
+            cartesian.title("Daily New Deaths - " + countryName);
+
         cartesian.title().fontColor("#000000");
         cartesian.title().fontOpacity(10);
         cartesian.title().fontStyle("bold");
@@ -367,9 +439,18 @@ public class GraphModellingActivity extends AppCompatActivity {
         StringNumber stringNumber = new StringNumber();
         String totalCasesFormatted = stringNumber.bigNumberFormatting(selectedCountryData.get(listSize-1).getTotalCases());
 
+        // these country names causes problem in render their graphs as they are too big or uses weird symbols
+        if(countryName.equals("Lao People's Democratic Republic"))
+            pie.title("Case Analysis : " + "Laos" + " : " + totalCasesFormatted +
+                    " Date-" + selectedCountryData.get(listSize-1).getDate());
+        else if(countryName.equals("Côte d'Ivoire"))
+            pie.title("Case Analysis : " + "Cote d.Ivoire" + " : " + totalCasesFormatted +
+                    " Date-" + selectedCountryData.get(listSize-1).getDate());
+        else
+            pie.title("Case Analysis : " + countryName + " : " + totalCasesFormatted +
+                    " Date-" + selectedCountryData.get(listSize-1).getDate());
+
         // prettifying the pie chart title
-        pie.title("Distribution of Total Cases : " + countryName + " : " + totalCasesFormatted +
-                " Date-" + selectedCountryData.get(listSize-1).getDate());
         pie.title().fontColor("#000000");
         pie.title().fontOpacity(10);
         pie.title().fontStyle("bold");
@@ -423,8 +504,15 @@ public class GraphModellingActivity extends AppCompatActivity {
 
         cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
 
+        // these country names causes problem in render their graphs as they are too big or uses weird symbols
+        if(countryName.equals("Lao People's Democratic Republic"))
+            cartesian.title("Trends of Daily Cases, Deaths and Recovered - " + "Laos");
+        else if(countryName.equals("Côte d'Ivoire"))
+            cartesian.title("Trends of Daily Cases, Deaths and Recovered - " + "Cote d.Ivoire");
+        else
+            cartesian.title("Trends of Daily Cases, Deaths and Recovered - " + countryName);
+
         // prettifying chart tile
-        cartesian.title("Trends of Daily Cases, Deaths and Recovered - " + countryName);
         cartesian.title().fontOpacity(10);
         cartesian.title().fontStyle("bold");
         cartesian.title().fontColor("#000000");
@@ -548,8 +636,15 @@ public class GraphModellingActivity extends AppCompatActivity {
 
         cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
 
+        // these country names causes problem in render their graphs as they are too big or uses weird symbols
+        if(countryName.equals("Lao People's Democratic Republic"))
+            cartesian.title("Infection/Positivity Rate Trend line - " + "Laos");
+        else if(countryName.equals("Côte d'Ivoire"))
+            cartesian.title("Infection/Positivity Rate Trend line - " + "Cote d.Ivoire");
+        else
+            cartesian.title("Infection/Positivity Rate Trend line - " + countryName);
+
         // prettifying chart tile
-        cartesian.title("Infection/Positivity Rate Trend line- " + countryName);
         cartesian.title().fontOpacity(10);
         cartesian.title().fontStyle("bold");
         cartesian.title().fontColor("#000000");

@@ -30,8 +30,12 @@ import com.google.firebase.database.ValueEventListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -339,30 +343,65 @@ public class MainActivity extends AppCompatActivity
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 Log.d(TAG, "setInfectionData onDataChange: start");
 
-                // iterating through all the dates and adding the data and calculating infection rate and adding it to the database
+                // iterating through all the country and then all dates of that country and adding the data and
+                // calculating infection rate and adding it to the database
                 for (DataSnapshot countryDataSnapshot : snapshot.getChildren()){
-                    //Log.d(TAG, "setInfectionData onDataChange: Country - Name key : " + countryDataSnapshot.getKey());
+
+                    // sort the date list in correct order by using comparator interface
+                    List<DbCountryData> currentDbCountryDataDateList = new ArrayList<>();
+                    for (DataSnapshot dateDataSnapshot : countryDataSnapshot.getChildren()){
+
+                        // fetching today data
+                        DbCountryData dbCountryData  = dateDataSnapshot.getValue(DbCountryData.class);
+                        // adding to the date list
+                        currentDbCountryDataDateList.add(dbCountryData);
+                    }
+                    // sorting according to dates
+                    Collections.sort(currentDbCountryDataDateList, new Comparator<DbCountryData>() {
+                        @Override
+                        public int compare(DbCountryData o1, DbCountryData o2) {
+                            Date date1 = null;
+                            Date date2 = null;
+                            // compare two instances of DbGlobalData
+                            // we compare their dates
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+                            try {
+                                date1 = simpleDateFormat.parse(o1.getDate());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                                Log.d(TAG, "compare: errorMessage : " + e.getMessage());
+                            }
+                            try {
+                                date2 = simpleDateFormat.parse(o2.getDate());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                                Log.d(TAG, "compare: errorMessage : " + e.getMessage());
+                            }
+
+                            return date1.compareTo(date2);
+                        }
+                    });
 
                     // declaring instance objects
                     DbCountryData yesterdayDbData = null;
                     DbCountryData dbCountryData = null;
                     boolean firstDataFetched = false;
 
-                    for (DataSnapshot dateDataSnapshot : countryDataSnapshot.getChildren()){
+                    // iterating over the country date list
+                    for (int i=0; i<currentDbCountryDataDateList.size(); i++){
 
-                        // storing yesterday data and finding infection rate
+                        // storing yesterday data
                         if(firstDataFetched) {
                             yesterdayDbData = dbCountryData;
                         }
 
-                        // fetching data
-                        dbCountryData = dateDataSnapshot.getValue(DbCountryData.class);
+                        // getting today data
+                        dbCountryData = currentDbCountryDataDateList.get(i);
                         firstDataFetched = true;
 
                         // after getting the new dbCountryData we compare with yesterdayDbData and calculate the infection rate by finding the number of new tests
                         if(yesterdayDbData != null){
 
-                            DbCountryDataInfection dbCountryDataInfection;
                             String todayDate = dbCountryData.getDate();
 
                             // finding infection rate
@@ -377,8 +416,8 @@ public class MainActivity extends AppCompatActivity
                                 infectionRate = ((double) newCases / newTests) * 100;
                             }
 
-                            // constructing a dbCountryDataInfection object
-                            dbCountryDataInfection = new DbCountryDataInfection(String.format("%.2f", infectionRate) , todayDate);
+                            // constructing a dbCountryDataInfection object and the infection rate and date
+                            DbCountryDataInfection dbCountryDataInfection = new DbCountryDataInfection(String.format("%.2f", infectionRate) , todayDate);
 
                             // writing data to the branch CountryDataInfection
                             mRootRef2.child("CountryDataInfection").child(dbCountryData.getCountryName())
@@ -388,7 +427,7 @@ public class MainActivity extends AppCompatActivity
 
                 }
 
-                Log.d(TAG, "onDataChange: country infectionRate data write successful end");
+                Log.d(TAG, "setInfectionData onDataChange: country infectionRate data write successful");
             }
 
             @Override
