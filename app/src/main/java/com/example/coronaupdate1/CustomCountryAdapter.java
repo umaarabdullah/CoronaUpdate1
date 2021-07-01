@@ -19,17 +19,14 @@ import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdapter.MyViewHolder> {
 
     private static final String TAG = "CustomAdapter";
     private final Context context;
-    private final List<CountryData> countryDataList;
-    private final ArrayList<String> countryNamesArrayList = new ArrayList<String>();
-    private final ArrayList<String> newCasesArrayList = new ArrayList<String>();
-    private final ArrayList<String> newDeathsArrayList = new ArrayList<String>();
+    private List<CountryData> countryDataList;
+
 
     public CustomCountryAdapter(Context context, List<CountryData> countryDataList){
         this.countryDataList = countryDataList;
@@ -44,9 +41,6 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
         // inflate the item Layout xml
         View view = LayoutInflater.from(context).inflate(R.layout.country_item_row_layout,
                 parent, false);
-
-        // getting the 3 ArrayLists
-        getAttributeArrayLists();
 
         // set the view's size, margins, paddings and layout parameters
         MyViewHolder myViewHolder = new MyViewHolder(view); // pass the view to View Holder
@@ -100,10 +94,7 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
                 intent.putExtra("new_recovered", Integer.toString(countryDataList.get(position).getNewRecovered()));
                 intent.putExtra("total_tests", Integer.toString(countryDataList.get(position).getTotalTests()));
 
-                intent.putStringArrayListExtra("country_name_array_list", countryNamesArrayList);
-                intent.putStringArrayListExtra("new_cases_array_list", newCasesArrayList);
-                intent.putStringArrayListExtra("new_deaths_array_list", newDeathsArrayList);
-
+                // need to start the next activity using context which passed from country fragment which was passed from main activity
                 context.startActivity(intent);
             }
         });
@@ -137,16 +128,6 @@ public class CustomCountryAdapter extends RecyclerView.Adapter<CustomCountryAdap
             dailyNewCases = (TextView) itemView.findViewById(R.id.daily_new_cases);
             dailyNewDeaths = (TextView) itemView.findViewById(R.id.daily_new_deaths);
         }
-    }
-
-    private ArrayList<String> getAttributeArrayLists() {
-        for (int i = 0; i<countryDataList.size(); i++){
-
-            countryNamesArrayList.add(countryDataList.get(i).getCountryName() );
-            newCasesArrayList.add(Integer.toString(countryDataList.get(i).getNewCases()));
-            newDeathsArrayList.add(Integer.toString(countryDataList.get(i).getNewDeaths()));
-        }
-        return countryNamesArrayList;
     }
 
 }

@@ -72,13 +72,13 @@
             </com.anychart.AnyChartView>
 
             <com.anychart.AnyChartView
-                android:id="@+id/any_chart_view_c_tests_cases_curve"
+                android:id="@+id/any_chart_view_c_infection_rate_curve"
                 android:layout_width="match_parent"
                 android:layout_height="550dp"
                 android:layout_marginTop="100dp">
 
                 <ProgressBar
-                    android:id="@+id/progress_bar_c_tests_cases_curve"
+                    android:id="@+id/progress_bar_c_infection_rate_curve"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"/>

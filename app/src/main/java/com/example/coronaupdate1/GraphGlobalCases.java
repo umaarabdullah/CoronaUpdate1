@@ -34,9 +34,13 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -48,10 +52,11 @@ public class GraphGlobalCases extends AppCompatActivity {
     private int activeCases;
     private int totalDeaths;
     private int totalRecovered;
+
     private String totalCasesFormatted;
     private String formattedDate;
 
-    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference("GlobalData");
+    private final DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference("GlobalData");
     private List<DbGlobalData> dbGlobalDataList = new ArrayList<DbGlobalData>();    // data by dates
 
     @Override
@@ -65,9 +70,18 @@ public class GraphGlobalCases extends AppCompatActivity {
         // enabling the up button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // get the data which passed into the intent from the previous activity
+        getIncomingIntentExtras();
+
+        // reading data from the firebase database
+        setEventListenerOnGlobalDataBranchReference();
+    }
+
+    private void getIncomingIntentExtras(){
+
         // checking if the appropriate intent extras were received properly or not
         if(getIntent().hasExtra("total_cases") && getIntent().hasExtra("active_cases")
-        && getIntent().hasExtra("total_deaths") && getIntent().hasExtra("total_recovered")){
+                && getIntent().hasExtra("total_deaths") && getIntent().hasExtra("total_recovered")){
 
             // getting the data which was passed from the previous activity
             totalCases = Integer.parseInt(getIntent().getStringExtra("total_cases"));
@@ -87,19 +101,52 @@ public class GraphGlobalCases extends AppCompatActivity {
 
         }
 
+    }
+
+
+    private void setEventListenerOnGlobalDataBranchReference(){
 
         // retrieve data from firebase
         mRootRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                // iterating through dates and adding the data to the List
+
+                // sorted in day wise from the database (1-Jan-2021, 1-Feb-2021 .....)
+                // iterating through all dates and adding the data to the List
                 for (DataSnapshot dateDataSnapShot : snapshot.getChildren()){
                     DbGlobalData dbGlobalData = dateDataSnapShot.getValue(DbGlobalData.class);
 
                     dbGlobalDataList.add(dbGlobalData);
                 }
 
+                // sort by dates (correctly) by using comparator
+                Collections.sort(dbGlobalDataList, new Comparator<DbGlobalData>() {
+                    @Override
+                    public int compare(DbGlobalData o1, DbGlobalData o2) {
+                        Date date1 = null;
+                        Date date2 = null;
+                        // compare two instances of DbGlobalData
+                        // we compare their dates
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+                        try {
+                            date1 = simpleDateFormat.parse(o1.getDate());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            Log.d(TAG, "compare: errorMessage : " + e.getMessage());
+                        }
+                        try {
+                            date2 = simpleDateFormat.parse(o2.getDate());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            Log.d(TAG, "compare: errorMessage : " + e.getMessage());
+                        }
+
+                        return date1.compareTo(date2);
+                    }
+                });
+
                 // drawing the the charts
+                // usually the onDataChange method gets called around last of the activity lifecycle (found by using logs)
                 setPieChart();
                 setNewCasesColumnChart();
 
@@ -112,6 +159,7 @@ public class GraphGlobalCases extends AppCompatActivity {
             }
 
         });
+
     }
 
     private void setPieChart(){
@@ -194,11 +242,13 @@ public class GraphGlobalCases extends AppCompatActivity {
             int cases = Integer.parseInt(dbGlobalDataList.get(i).getNewCases());
 
             casesData.add(new ValueDataEntry(dbGlobalDataList.get(i).getDate(), cases));
+
         }
 
         Column column = cartesian.column(casesData);
         column.color("#01294b");    // setting column bar color
 
+        // hover handling
         column.tooltip()
                 .titleFormat("{%X}")
                 .position(Position.CENTER_BOTTOM)

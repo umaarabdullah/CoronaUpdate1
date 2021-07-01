@@ -6,9 +6,4 @@
         android:title=""
         app:showAsAction="always"
         android:icon="@drawable/graph_icon" />
-    <item
-        android:id="@+id/menu_refresh_global"
-        android:title="@string/refresh"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_baseline_refresh_24"/>
 </menu>

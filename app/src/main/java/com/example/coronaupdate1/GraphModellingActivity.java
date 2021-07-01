@@ -28,9 +28,9 @@ import com.anychart.enums.LegendLayout;
 import com.anychart.enums.MarkerType;
 import com.anychart.enums.Position;
 import com.anychart.enums.TooltipPositionMode;
-import com.anychart.graphics.vector.Fill;
 import com.anychart.graphics.vector.Stroke;
 import com.example.coronaupdate1.DataModel.DbCountryData;
+import com.example.coronaupdate1.DataModel.DbCountryDataInfection;
 import com.example.coronaupdate1.utility.StringNumber;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,7 +40,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class GraphModellingActivity extends AppCompatActivity {
@@ -49,7 +54,10 @@ public class GraphModellingActivity extends AppCompatActivity {
     private String countryName;
 
     private DatabaseReference mRootRef;
-    private final List<DbCountryData> selectedCountryData = new ArrayList<DbCountryData>();        // selected country data by dates
+    private DatabaseReference mRootRef1;
+
+    private List<DbCountryData> selectedCountryData = new ArrayList<>();              // selected country data by dates
+    private List<DbCountryDataInfection> infectionRateData = new ArrayList<>();       // infection data of the selected country by dates
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,55 +78,175 @@ public class GraphModellingActivity extends AppCompatActivity {
             countryName = getIntent().getStringExtra("country_name");
             Log.d(TAG, "onCreate: got intent");
 
+            // referencing country data branch in the json tree in firebase
+            setReferenceToCountryDataBranch();
 
-            // referencing the correct branch in the database. I.e on the basis of countryName whose detail screen was clicked
-            if(countryName == "S. Korea"){
-                mRootRef = FirebaseDatabase.getInstance().getReference().child("CountryData").child("South Korea");
-            }
-            else if (countryName == "St. Barth"){
-                mRootRef = FirebaseDatabase.getInstance().getReference().child("CountryData").child("Saint Barth");
-            }
-            else{
-                mRootRef = FirebaseDatabase.getInstance().getReference().child("CountryData").child(countryName);
-            }
-            Log.d(TAG, "onCreate: referenced countryName branch correctly");
+            // referencing country data infection branch in the json tree in firebase
+            setReferenceToCountryDataInfectionBranch();
 
+            // reading data from the country data branch from firebase realtime database
+            setEventListenerOnCountryDataBranchReference();
 
-            // retrieving data from the dataBase
-            mRootRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                    // iterating through dates and adding the data at each date to the list
-                    for (DataSnapshot dateDataSnapshot : snapshot.getChildren()){
-
-                        // fetching data
-                        DbCountryData dbCountryData = dateDataSnapshot.getValue(DbCountryData.class);
-
-                        // adding to the list
-                        selectedCountryData.add(dbCountryData);
-
-                        Log.d(TAG, "onDataChange: countryName " + "dbCountryData.getCountryName()");
-                        Log.d(TAG, "onDataChange: childrenCount " + dateDataSnapshot.getChildrenCount());
-                        Log.d(TAG, "onDataChange: Key " + dateDataSnapshot.getKey());
-                    }
-
-                    Log.d(TAG, "onCreate: retrieved data successfully");
-
-                    // after data is fetched several charts are drawn
-                    setNewCasesColumnChart();
-                    setNewDeathsColumnChart();
-                    setPieChart();
-                    setLineChartDailyCasesDeathsRecovered();
-                    setLineChartTotalTestsCases();
-                }
-
-                @Override
-                public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
-                }
-            });
+            // reading data from the country data Infection branch from firebase realtime database
+            setEventListenerOnCountryDataInfectionBranchReference();
 
         }
+    }
+
+
+    private void setEventListenerOnCountryDataBranchReference(){
+
+        // retrieve data from the database using the reference
+        mRootRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+
+                // declaring instance objects
+                DbCountryData dbCountryData;
+
+                // iterating through all the dates and adding the data at each date to the list
+                for (DataSnapshot dateDataSnapshot : snapshot.getChildren()){
+
+                    // fetching data
+                    dbCountryData = dateDataSnapshot.getValue(DbCountryData.class);
+
+                    // adding to the list
+                    selectedCountryData.add(dbCountryData);
+
+                }
+
+                // sort by date correctly by using comparator
+                Collections.sort(selectedCountryData, new Comparator<DbCountryData>() {
+                    @Override
+                    public int compare(DbCountryData o1, DbCountryData o2) {
+                        Date date1 = null;
+                        Date date2 = null;
+                        // compare two instances of DbGlobalData
+                        // we compare their dates
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+                        try {
+                            date1 = simpleDateFormat.parse(o1.getDate());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            Log.d(TAG, "compare: errorMessage : " + e.getMessage());
+                        }
+                        try {
+                            date2 = simpleDateFormat.parse(o2.getDate());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            Log.d(TAG, "compare: errorMessage : " + e.getMessage());
+                        }
+
+                        return date1.compareTo(date2);
+                    }
+                });
+
+                Log.d(TAG, "onCreate: CountryData retrieved successfully");
+
+                // after data is fetched several charts are drawn
+                setNewCasesColumnChart();
+                setNewDeathsColumnChart();
+                setPieChart();
+                setLineChartDailyCasesDeathsRecovered();
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    private void setEventListenerOnCountryDataInfectionBranchReference(){
+
+        // retrieve data from the database using the reference
+        mRootRef1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+
+                // declaring instance objects
+                DbCountryDataInfection dbCountryDataInfection;
+
+                // iterating through all the dates and adding the data at each date to the list
+                for (DataSnapshot dateDataSnapshot : snapshot.getChildren()){
+
+                    // fetching data
+                    dbCountryDataInfection = dateDataSnapshot.getValue(DbCountryDataInfection.class);
+
+                    // adding to the list
+                    infectionRateData.add(dbCountryDataInfection);
+
+                }
+
+                // sort by date correctly by using comparator
+                Collections.sort(infectionRateData, new Comparator<DbCountryDataInfection>() {
+                    @Override
+                    public int compare(DbCountryDataInfection o1, DbCountryDataInfection o2) {
+                        Date date1 = null;
+                        Date date2 = null;
+                        // compare two instances of DbGlobalData
+                        // we compare their dates
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+                        try {
+                            date1 = simpleDateFormat.parse(o1.getDate());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            Log.d(TAG, "compare: errorMessage : " + e.getMessage());
+                        }
+                        try {
+                            date2 = simpleDateFormat.parse(o2.getDate());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            Log.d(TAG, "compare: errorMessage : " + e.getMessage());
+                        }
+
+                        return date1.compareTo(date2);
+                    }
+                });
+
+                Log.d(TAG, "onCreate: infection data retrieved successfully");
+
+                setInfectionRate();
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    private void setReferenceToCountryDataBranch(){
+
+        // referencing the correct branch CountryData in the database. I.e on the basis of which country's detail screen was clicked
+        if(countryName.equals("S. Korea")){
+            mRootRef = FirebaseDatabase.getInstance().getReference().child("CountryData").child("South Korea");
+        }
+        else if (countryName.equals("St. Barth")){
+            mRootRef = FirebaseDatabase.getInstance().getReference().child("CountryData").child("Saint Barth");
+        }
+        else{
+            mRootRef = FirebaseDatabase.getInstance().getReference().child("CountryData").child(countryName);
+        }
+        Log.d(TAG, "onCreate: referenced CountryData branch correctly");
+
+    }
+
+    private void setReferenceToCountryDataInfectionBranch(){
+
+        // referencing the correct branch CountryDataInfection in the database. I.e on the basis of which country's detail screen was clicked
+        if(countryName.equals("S. Korea")){
+            mRootRef1 = FirebaseDatabase.getInstance().getReference().child("CountryDataInfection").child("South Korea");
+        }
+        else if (countryName.equals("St. Barth")){
+            mRootRef1 = FirebaseDatabase.getInstance().getReference().child("CountryDataInfection").child("Saint Barth");
+        }
+        else{
+            mRootRef1 = FirebaseDatabase.getInstance().getReference().child("CountryDataInfection").child(countryName);
+        }
+        Log.d(TAG, "onCreate: referenced CountryDataInfection branch correctly");
     }
 
     private void setNewCasesColumnChart(){
@@ -139,6 +267,7 @@ public class GraphModellingActivity extends AppCompatActivity {
             int cases = Integer.parseInt(selectedCountryData.get(i).getNewCases());
 
             casesData.add(new ValueDataEntry(selectedCountryData.get(i).getDate(), cases));
+
         }
 
         Column column = cartesian.column(casesData);
@@ -154,10 +283,19 @@ public class GraphModellingActivity extends AppCompatActivity {
 
         // prettifying the chart title
         cartesian.animation(true);
-        cartesian.title("Daily New Cases - " + countryName);
+
+        // these country names causes problem in render their graphs as they are too big or uses weird symbols
+        if(countryName.equals("Lao People's Democratic Republic"))
+            cartesian.title("Daily New Cases - " + "Laos");
+        else if(countryName.equals("Côte d'Ivoire"))
+            cartesian.title("Daily New Cases - " + "Cote d.Ivoire");
+        else
+            cartesian.title("Daily New Cases - " + countryName);
+
         cartesian.title().fontColor("#000000");
         cartesian.title().fontOpacity(10);
         cartesian.title().fontStyle("bold");
+        cartesian.title().padding(0,0,20,30);    // top, right , bottom, left
 
         cartesian.yScale().minimum(0d);
 
@@ -223,10 +361,19 @@ public class GraphModellingActivity extends AppCompatActivity {
 
         // prettifying the chart title
         cartesian.animation(true);
-        cartesian.title("Daily New Deaths - " + countryName);
+
+        // these country names causes problem in render their graphs as they are too big or uses weird symbols
+        if(countryName.equals("Lao People's Democratic Republic"))
+            cartesian.title("Daily New Deaths - " + "Laos");
+        else if(countryName.equals("Côte d'Ivoire"))
+            cartesian.title("Daily New Deaths - " + "Cote d.Ivoire");
+        else
+            cartesian.title("Daily New Deaths - " + countryName);
+
         cartesian.title().fontColor("#000000");
         cartesian.title().fontOpacity(10);
         cartesian.title().fontStyle("bold");
+        cartesian.title().padding(0,0,20,30);    // top, right , bottom, left
 
         cartesian.yScale().minimum(0d);
 
@@ -292,9 +439,18 @@ public class GraphModellingActivity extends AppCompatActivity {
         StringNumber stringNumber = new StringNumber();
         String totalCasesFormatted = stringNumber.bigNumberFormatting(selectedCountryData.get(listSize-1).getTotalCases());
 
+        // these country names causes problem in render their graphs as they are too big or uses weird symbols
+        if(countryName.equals("Lao People's Democratic Republic"))
+            pie.title("Case Analysis : " + "Laos" + " : " + totalCasesFormatted +
+                    " Date-" + selectedCountryData.get(listSize-1).getDate());
+        else if(countryName.equals("Côte d'Ivoire"))
+            pie.title("Case Analysis : " + "Cote d.Ivoire" + " : " + totalCasesFormatted +
+                    " Date-" + selectedCountryData.get(listSize-1).getDate());
+        else
+            pie.title("Case Analysis : " + countryName + " : " + totalCasesFormatted +
+                    " Date-" + selectedCountryData.get(listSize-1).getDate());
+
         // prettifying the pie chart title
-        pie.title("Distribution of Total Cases : " + countryName + " : " + totalCasesFormatted +
-                " Date-" + selectedCountryData.get(listSize-1).getDate());
         pie.title().fontColor("#000000");
         pie.title().fontOpacity(10);
         pie.title().fontStyle("bold");
@@ -348,8 +504,15 @@ public class GraphModellingActivity extends AppCompatActivity {
 
         cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
 
+        // these country names causes problem in render their graphs as they are too big or uses weird symbols
+        if(countryName.equals("Lao People's Democratic Republic"))
+            cartesian.title("Trends of Daily Cases, Deaths and Recovered - " + "Laos");
+        else if(countryName.equals("Côte d'Ivoire"))
+            cartesian.title("Trends of Daily Cases, Deaths and Recovered - " + "Cote d.Ivoire");
+        else
+            cartesian.title("Trends of Daily Cases, Deaths and Recovered - " + countryName);
+
         // prettifying chart tile
-        cartesian.title("Trends of Daily Cases, Deaths and Recovered of " + countryName);
         cartesian.title().fontOpacity(10);
         cartesian.title().fontStyle("bold");
         cartesian.title().fontColor("#000000");
@@ -447,18 +610,18 @@ public class GraphModellingActivity extends AppCompatActivity {
         cartesian.legend().fontColor("#000000");
         cartesian.legend().fontOpacity(10);
         cartesian.legend().fontStyle("bold");
-        cartesian.legend().padding(0d, 0d, 10d, 0d);
+        cartesian.legend().padding(0d, 0d, 30d, 0d);
 
         anyChartView.setChart(cartesian);
 
     }
 
-    private void setLineChartTotalTestsCases(){
+    private void setInfectionRate(){
 
         // Line Chart using anyChart
-        AnyChartView anyChartView = findViewById(R.id.any_chart_view_c_tests_cases_curve);
+        AnyChartView anyChartView = findViewById(R.id.any_chart_view_c_infection_rate_curve);
         APIlib.getInstance().setActiveAnyChartView(anyChartView);   // very important line of code for multiple charts
-        anyChartView.setProgressBar(findViewById(R.id.progress_bar_c_tests_cases_curve));
+        anyChartView.setProgressBar(findViewById(R.id.progress_bar_c_infection_rate_curve));
 
         Cartesian cartesian = AnyChart.line();
 
@@ -473,8 +636,15 @@ public class GraphModellingActivity extends AppCompatActivity {
 
         cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
 
+        // these country names causes problem in render their graphs as they are too big or uses weird symbols
+        if(countryName.equals("Lao People's Democratic Republic"))
+            cartesian.title("Infection/Positivity Rate Trend line - " + "Laos");
+        else if(countryName.equals("Côte d'Ivoire"))
+            cartesian.title("Infection/Positivity Rate Trend line - " + "Cote d.Ivoire");
+        else
+            cartesian.title("Infection/Positivity Rate Trend line - " + countryName);
+
         // prettifying chart tile
-        cartesian.title("Infection/Positivity Rate - Line Trend " + countryName);
         cartesian.title().fontOpacity(10);
         cartesian.title().fontStyle("bold");
         cartesian.title().fontColor("#000000");
@@ -505,20 +675,18 @@ public class GraphModellingActivity extends AppCompatActivity {
         List<DataEntry> seriesData = new ArrayList<>();
 
         // assigning data
-        for (int i=0; i<selectedCountryData.size(); i++){
+        for (int i=0; i<infectionRateData.size(); i++){
 
-            String date = selectedCountryData.get(i).getDate();
-            int totalTests = Integer.parseInt(selectedCountryData.get(i).getTotalTests());
-            int totalCases = Integer.parseInt(selectedCountryData.get(i).getTotalCases());
+            String date = infectionRateData.get(i).getDate();
+            double infectionRate = Double.parseDouble(infectionRateData.get(i).getInfectionRate());
 
-            seriesData.add(new CustomDataEntryTc(date, totalTests, totalCases));
+            seriesData.add(new CustomDataEntryTc(date, infectionRate));
         }
 
         Set set = Set.instantiate();
         set.data(seriesData);
 
         Mapping series1Mapping = set.mapAs("{ x: 'x', value: 'value' }");
-        Mapping series2Mapping = set.mapAs("{ x: 'x', value: 'value2' }");
 
         Line series1 = cartesian.line(series1Mapping);
         series1.name("Infection Rate");
@@ -535,41 +703,25 @@ public class GraphModellingActivity extends AppCompatActivity {
         // setting color (YELLOW) for the line and corresponding Check box
         series1.stroke("#BAB86C");
 
-        Line series2 = cartesian.line(series2Mapping);
-        series2.name("Daily Tests");
-        series2.hovered().markers().enabled(true);
-        series2.hovered().markers()
-                .type(MarkerType.CIRCLE)
-                .size(4d);
-        series2.tooltip()
-                .position("right")
-                .anchor(Anchor.LEFT_CENTER)
-                .offsetX(5d)
-                .offsetY(5d);
-
-        // setting color (RED) for the line and corresponding Check box
-        series2.stroke("#7B68EE");
-
         // prettifying the legend texts New Infected Case, Death, Recovered
         cartesian.legend().enabled(true);
         cartesian.legend().fontColor("#000000");
         cartesian.legend().fontOpacity(10);
         cartesian.legend().fontStyle("bold");
-        cartesian.legend().padding(0d, 0d, 10d, 0d);
+        cartesian.legend().padding(0d, 0d, 30d, 0d);
 
         anyChartView.setChart(cartesian);
 
     }
 
-    private class CustomDataEntryTc extends ValueDataEntry{
+    private static class CustomDataEntryTc extends ValueDataEntry{
 
-        CustomDataEntryTc(String x, Number value, Number value2){
+        CustomDataEntryTc(String x, Double value){
             super(x, value);
-            setValue("value2", value2);
         }
     }
 
-    private class CustomDataEntry extends ValueDataEntry{
+    private static class CustomDataEntry extends ValueDataEntry{
 
         CustomDataEntry(String x, Number value, Number value2, Number value3){
             super(x, value);
