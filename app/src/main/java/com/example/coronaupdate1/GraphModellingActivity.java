@@ -264,6 +264,10 @@ public class GraphModellingActivity extends AppCompatActivity {
         // (Experimental thought) sometime column chart fails to render if cases are below 20 (assumption) or near 0 or 0
         for (int i=0; i<selectedCountryData.size(); i++){
 
+            // ignoring the data on 27-Jun-2021
+            if(selectedCountryData.get(i).getDate().equals("27-Jun-2021"))
+                continue;
+
             int cases = Integer.parseInt(selectedCountryData.get(i).getNewCases());
 
             casesData.add(new ValueDataEntry(selectedCountryData.get(i).getDate(), cases));
@@ -342,6 +346,10 @@ public class GraphModellingActivity extends AppCompatActivity {
         // X and Y axis data assigned
         // (Experimental thought) sometime column chart fails to render if cases are below 20 (assumption) or near 0 or 0
         for (int i=0; i<selectedCountryData.size(); i++){
+
+            // ignoring the data on 27-Jun-2021
+            if(selectedCountryData.get(i).getDate().equals("27-Jun-2021"))
+                continue;
 
             int deaths = Integer.parseInt(selectedCountryData.get(i).getNewDeaths());
 
@@ -545,6 +553,10 @@ public class GraphModellingActivity extends AppCompatActivity {
         // assigning data
         for (int i=0; i<selectedCountryData.size(); i++){
 
+            // ignoring the data on 27-Jun-2021
+            if(selectedCountryData.get(i).getDate().equals("27-Jun-2021"))
+                continue;
+
             String date = selectedCountryData.get(i).getDate();
             int newCases = Integer.parseInt(selectedCountryData.get(i).getNewCases());
             int newDeaths = Integer.parseInt(selectedCountryData.get(i).getNewDeaths());
@@ -676,6 +688,10 @@ public class GraphModellingActivity extends AppCompatActivity {
 
         // assigning data
         for (int i=0; i<infectionRateData.size(); i++){
+
+            // ignoring the data on 27-Jun-2021
+            if(infectionRateData.get(i).getDate().equals("27-Jun-2021"))
+                continue;
 
             String date = infectionRateData.get(i).getDate();
             double infectionRate = Double.parseDouble(infectionRateData.get(i).getInfectionRate());
