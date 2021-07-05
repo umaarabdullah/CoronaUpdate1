@@ -25,5 +25,6 @@
         in the 4th semester of our B.Sc Degree in CS.
     </string>
     <string name="refresh">Refresh</string>
+    <string name="welcome_to_google_sign_in">Please Sign in with Google Account</string>
 
 </resources>
