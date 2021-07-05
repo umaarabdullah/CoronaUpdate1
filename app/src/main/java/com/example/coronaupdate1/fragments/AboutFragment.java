@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,6 +32,9 @@ public class AboutFragment extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
 
         Button logOutButton = view.findViewById(R.id.log_out_button);
+        logOutButton.setText(firebaseAuth.getCurrentUser().getEmail() + "\nLOGOUT");
+
+        // setting listener to the logout button
         logOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
