@@ -105,7 +105,8 @@ public class GoogleSignInActivity extends AppCompatActivity {
             }
             catch (ApiException e) {
 
-                // Please refer to the GoogleSignInStatusCodes class reference for more information.
+                // throws error in current branch because after apk is created there is some problem with
+                // keystore key and google sign in doesn't work in the apk install app
                 Log.d(TAG, "handleSignInResult: signInResult:failed code= " + e.getStatusCode());
             }
 
