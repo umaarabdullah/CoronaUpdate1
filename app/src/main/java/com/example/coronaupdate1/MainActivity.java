@@ -178,8 +178,6 @@ public class MainActivity extends AppCompatActivity
                     return;
                 }
 
-                Toast.makeText(getApplicationContext(), "Country List Ready", Toast.LENGTH_SHORT).show();
-
                 Log.d(TAG, "getCountryData onResponse : CountryName at index 1 = " + countryDataList.get(1).getCountryName());
                 Log.d(TAG, "getCountryData onResponse : CountryDataList size : " + countryDataList.size());
 
