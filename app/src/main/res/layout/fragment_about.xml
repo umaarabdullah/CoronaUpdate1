@@ -22,13 +22,6 @@
                 android:adjustViewBounds="true"
                 app:srcCompat="@drawable/about_precautions" />
 
-            <Button
-                android:id="@+id/log_out_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Logout"
-                android:layout_gravity="center"/>
-
             <ImageView
                 android:id="@+id/about_pre1_image"
                 android:layout_width="match_parent"
@@ -45,6 +38,15 @@
                 android:gravity="center"
                 android:textColor="@color/white"
                 android:textSize="14sp"/>
+
+            <Button
+                android:id="@+id/log_out_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Logout"
+                android:layout_gravity="center"/>
+
         </LinearLayout>
     </ScrollView>
 

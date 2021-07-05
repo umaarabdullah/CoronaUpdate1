@@ -130,7 +130,7 @@ public class GoogleSignInActivity extends AppCompatActivity {
                         // check if the user is new or not
                         if(authResult.getAdditionalUserInfo().isNewUser()){
                             // new user
-                            Toast.makeText(getApplicationContext(), "Sign Up Successful...\n" + email, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Sign in Successful...\n" + email, Toast.LENGTH_SHORT).show();
                         }
                         else{
                             // old user existing
