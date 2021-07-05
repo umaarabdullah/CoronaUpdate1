@@ -20,14 +20,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                app:srcCompat="@drawable/about_precautions" />
+                app:srcCompat="@drawable/about_precautions"
+                android:contentDescription="@string/covid_precautions"/>
 
             <ImageView
                 android:id="@+id/about_pre1_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:src="@drawable/about_precautions1" />
+                android:src="@drawable/about_precautions1"
+                android:contentDescription="@string/covid_precautions"/>
 
             <TextView
                 android:id="@+id/developer_signatures"
@@ -38,6 +40,15 @@
                 android:gravity="center"
                 android:textColor="@color/white"
                 android:textSize="14sp"/>
+
+            <Button
+                android:id="@+id/log_out_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                android:layout_marginBottom="20dp"
+                android:layout_gravity="center"/>
+
         </LinearLayout>
     </ScrollView>
 

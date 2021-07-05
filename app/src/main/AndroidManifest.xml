@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CoronaUpdate1">
-        <activity android:name=".GraphGlobalCases"></activity>
+        <activity android:name=".GoogleSignInActivity"></activity>
+        <activity android:name=".GraphGlobalCases" />
         <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +22,7 @@
         </activity>
         <activity android:name=".GraphModellingActivity" />
         <activity android:name=".CountryDetailActivity" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>
