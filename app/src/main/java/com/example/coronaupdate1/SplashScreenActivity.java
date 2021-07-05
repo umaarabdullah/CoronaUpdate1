@@ -32,7 +32,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 } finally {
                     finish();
                     // launching the MainActivity after the splash screen has launched
-                    startActivity(new Intent(getApplicationContext(), GoogleSignInActivity.class));
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 }
             }
         };
